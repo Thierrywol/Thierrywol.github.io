@@ -1,27 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const preQuestionnaire = document.getElementById("pre-questionnaire");
-  const testInterface = document.getElementById("test-interface");
-  const postQuestionnaire = document.getElementById("post-questionnaire");
+  const pre = document.getElementById("pre-questionnaire");
+  const test = document.getElementById("test-interface");
+  const post = document.getElementById("post-questionnaire");
 
-  // Create and add a "Start Test" button to the pre-questionnaire
-  const startButton = document.createElement("button");
-  startButton.textContent = "Start test";
-  startButton.className = "button";
-  startButton.style.marginTop = "2rem";
-  preQuestionnaire.appendChild(startButton);
-
-  startButton.addEventListener("click", function () {
-    preQuestionnaire.style.display = "none";
-    testInterface.style.display = "flex";
+  document.getElementById("verdervoor").addEventListener("click", function () {
+    pre.style.display = "none";
+    test.style.display = "block";
   });
 
-  // Select test buttons
-  const testButtons = testInterface.querySelectorAll(".button");
+  document.getElementById("verdertest").addEventListener("click", function () {
+    test.style.display = "none";
+    post.style.display = "block";
+  });
 
-  testButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      testInterface.style.display = "none";
-      postQuestionnaire.style.display = "block";
-    });
+  document.getElementById("verderachteraf").addEventListener("click", function () {
+    alert("Bedankt voor het invullen van de test!");
   });
 });
