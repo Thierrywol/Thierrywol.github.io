@@ -2,25 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Gradient with PNG Overlay</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(to bottom, rgba(30, 86, 83, 1) 0%, rgba(25, 60, 75, 1) 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    img.overlay {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-  </style>
+  <title>Muziekperceptietest</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <img src="online-banking-2.png" alt="Overlay Image" class="overlay">
+  <div class="background">
+    <img src="online-banking-2.png" alt="Overlay Image" class="overlay-image">
+  </div>
+
+  <div class="container">
+    <div id="voorafgaand">
+      <h2>Vragenlijst voorafgaand de muziekperceptietest</h2>
+      <label>Wat is uw leeftijd (in jaren)?</label><br>
+      <select>
+        <option>18–20</option>
+        <option>21–30</option>
+        <option>31–40</option>
+        <option>41–50</option>
+        <option>51–60</option>
+        <option>61–70</option>
+        <option>71–80</option>
+        <option>81–90</option>
+        <option>91–100</option>
+      </select><br><br>
+
+      <label>Ervaart u zelf gehoorvermindering?</label><br>
+      <input type="radio" name="hearing" id="arts" value="arts">
+      <label for="arts">Ja, door arts vastgesteld</label><br>
+      <input type="radio" name="hearing" id="self" value="self">
+      <label for="self">Ja, zelf ervaren</label><br>
+      <input type="radio" name="hearing" id="no" value="no">
+      <label for="no">Nee</label><br><br>
+    </div>
+
+    <div id="test-interface" style="display: none;">
+      <h2>Gaat het geluid van links naar rechts of van rechts naar links?</h2>
+      <div class="button-row">
+        <button class="button">Van links naar rechts</button>
+        <button class="button">Van rechts naar links</button>
+      </div>
+    </div>
+
+    <div id="achteraf" style="display: none;">
+      <h2>Evaluatie vragenlijst na de muziekperceptietest</h2>
+      <p>Beantwoord onderstaande vragen van 1 (slecht/onduidelijk/etc) tot 7 (goed/duidelijk/etc).</p>
+      <ol>
+        <li>De instructies voorafgaand aan de test waren duidelijk. <br> 1–7</li>
+        <li>Hoe comfortabel voelde je je tijdens de test? <br> 1–7</li>
+        <li>Hoe goed werkte de test op jouw apparaat? <br> 1–7</li>
+        <li>Hoe moeilijk vond u de test? <br> 1–7</li>
+        <li>Hoe overzichtelijk vond u de opzet van de test? <br> 1–7</li>
+        <li>Hoe vond u de lengte van de test? <br> 1–7</li>
+        <li>Hoe beoordeelt u de geluidskwaliteit? <br> 1–7</li>
+        <li>Hoe gebruiksvriendelijk was de interface? <br> 1–7</li>
+        <li>Zou u deze test aanbevelen aan anderen? <br> 1–7</li>
+        <li>Heeft u nog feedback?<br>
+          <textarea rows="4" cols="40" placeholder="Typ hier uw feedback..."></textarea>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
