@@ -72,32 +72,34 @@ body {
 }
 
 #voorafgaand {
-  font-size: 1.3rem; /* Grotere tekst */
-  line-height: 1.8; /* Meer regelafstand */
-  max-width: 600px;
+  font-size: 1.4rem;
+  max-width: 700px;
   margin: 0 auto;
-  text-align: left;
-}
-
-#voorafgaand h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
   text-align: center;
+  line-height: 1.6;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#voorafgaand label {
-  font-weight: 600;
-  display: block;
-  margin-top: 1.2rem;
-  margin-bottom: 0.5rem;
+
+#voorafgaand select {
+  font-size: 1rem;
+  padding: 0.5rem;
+  width: auto;
+  margin-bottom: 1rem;
 }
 
-#voorafgaand select,
-#voorafgaand input[type="radio"] {
-  transform: scale(1.2); /* Maakt select en radio buttons groter */
-  margin-right: 0.5rem;
+.radio-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+  font-weight: 500;
 }
 
-#voorafgaand .button {
-  margin-top: 2rem;
+.radio-option input[type="radio"] {
+  margin-left: 1rem;
+  transform: scale(1.3);
 }
