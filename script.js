@@ -1,24 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const vooraf = document.getElementById("voorafgaand");
+  const pre = document.getElementById("pre-questionnaire");
   const test = document.getElementById("test-interface");
-  const achteraf = document.getElementById("achteraf");
+  const post = document.getElementById("post-questionnaire");
 
-  const knopVoor = document.getElementById("verdervoor");
-  const knopTest = document.getElementById("verdertest");
-  const knopAchteraf = document.getElementById("verderachteraf");
-
-  knopVoor.addEventListener("click", function () {
-    vooraf.style.display = "none";
+  document.getElementById("verdervoor").addEventListener("click", function () {
+    pre.style.display = "none";
     test.style.display = "block";
   });
 
-  knopTest.addEventListener("click", function () {
+  document.getElementById("verdertest").addEventListener("click", function () {
     test.style.display = "none";
-    achteraf.style.display = "block";
+    post.style.display = "block";
   });
 
-  knopAchteraf.addEventListener("click", function () {
-    alert("Bedankt voor uw deelname");
+  document.getElementById("verderachteraf").addEventListener("click", function () {
+    alert("Bedankt voor het invullen van de test!");
   });
 });
 document.addEventListener("DOMContentLoaded", function () {
