@@ -130,3 +130,11 @@ body {
   transform: translateX(-50%);
   margin-bottom: 30px;
 }
+
+#verdervoor {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 20px;
+}
