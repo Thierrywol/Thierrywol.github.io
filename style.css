@@ -70,3 +70,34 @@ body {
   color: #555;
   margin-top: 4px;
 }
+
+#voorafgaand {
+  font-size: 1.3rem; /* Grotere tekst */
+  line-height: 1.8; /* Meer regelafstand */
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#voorafgaand h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+#voorafgaand label {
+  font-weight: 600;
+  display: block;
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+#voorafgaand select,
+#voorafgaand input[type="radio"] {
+  transform: scale(1.2); /* Maakt select en radio buttons groter */
+  margin-right: 0.5rem;
+}
+
+#voorafgaand .button {
+  margin-top: 2rem;
+}
