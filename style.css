@@ -103,3 +103,30 @@ body {
   margin-left: 1rem;
   transform: scale(1.3);
 }
+
+#test-interface {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* center the question and left/right buttons */
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 300px;
+}
+
+#verdertest {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 30px;
+}
