@@ -13,29 +13,63 @@
   <div class="container">
     <div id="voorafgaand">
       <h2>Vragenlijst voorafgaand de muziekperceptietest</h2>
-      <label>Wat is uw leeftijd (in jaren)?</label><br>
-      <select>
-        <option>18–20</option>
-        <option>21–30</option>
-        <option>31–40</option>
-        <option>41–50</option>
-        <option>51–60</option>
-        <option>61–70</option>
-        <option>71–80</option>
-        <option>81–90</option>
-        <option>91–100</option>
-      </select><br><br>
+      
+      <div class="age-selection">
+        <label>Wat is uw leeftijd (in jaren)?</label>
+        <div class="age-grid">
+          <label class="age-option">
+            <input type="radio" name="age" value="18-20">
+            18–20
+          </label>
+          <label class="age-option">
+            <input type="radio" name="age" value="21-30">
+            21–30
+          </label>
+          <label class="age-option">
+            <input type="radio" name="age" value="31-40">
+            31–40
+          </label>
+          <label class="age-option">
+            <input type="radio" name="age" value="41-50">
+            41–50
+          </label>
+          <label class="age-option">
+            <input type="radio" name="age" value="51-60">
+            51–60
+          </label>
+          <label class="age-option">
+            <input type="radio" name="age" value="61-70">
+            61–70
+          </label>
+          <label class="age-option">
+            <input type="radio" name="age" value="71-80">
+            71–80
+          </label>
+          <label class="age-option">
+            <input type="radio" name="age" value="81-90">
+            81–90
+          </label>
+          <label class="age-option">
+            <input type="radio" name="age" value="91-100">
+            91–100
+          </label>
+        </div>
+      </div>
 
-      <label>Ervaart u zelf gehoorvermindering?</label><br>
-      <label class="radio-option">Ja, door arts vastgesteld
-        <input type="radio" name="hearing" value="arts">
-      </label><br>
-      <label class="radio-option">Ja, zelf ervaren
-        <input type="radio" name="hearing" value="self">
-      </label><br>
-      <label class="radio-option">Nee
-        <input type="radio" name="hearing" value="no">
-      </label><br><br>
+      <div class="hearing-selection">
+        <label class="hearing-label">Ervaart u zelf gehoorvermindering?</label>
+        <div class="hearing-options">
+          <label class="radio-option">Ja, door arts vastgesteld
+            <input type="radio" name="hearing" value="arts">
+          </label>
+          <label class="radio-option">Ja, zelf ervaren
+            <input type="radio" name="hearing" value="self">
+          </label>
+          <label class="radio-option">Nee
+            <input type="radio" name="hearing" value="no">
+          </label>
+        </div>
+      </div>
 
       <button id="verdervoor" class="button">Verdergaan</button>
     </div>

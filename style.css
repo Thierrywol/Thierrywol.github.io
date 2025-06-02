@@ -2,9 +2,9 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(to bottom, rgba(30, 86, 83, 1), rgba(25, 60, 75, 1));
-  overflow: hidden;
+  overflow-x: hidden;
   position: relative;
 }
 
@@ -27,9 +27,8 @@ body {
 .container {
   position: relative;
   z-index: 1;
-  padding: 2rem;
   color: white;
-  text-align: center;
+  min-height: 100vh;
 }
 
 .button-row {
@@ -47,40 +46,150 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  font-weight: 600;
 }
 
+.button:hover {
+  background-color: #e09400;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+/* Full width front page styles */
 #voorafgaand {
-  font-size: 1.4rem;
-  max-width: 700px;
-  margin: 0 auto;
+  padding: 3rem;
   text-align: center;
-  line-height: 1.6;
-  padding: 1rem;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 3rem;
 }
 
-#voorafgaand select {
-  font-size: 1rem;
-  padding: 0.5rem;
-  width: auto;
-  margin-bottom: 1rem;
+#voorafgaand h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  max-width: 1000px;
+}
+
+/* Age selection - full width grid */
+.age-selection {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.age-selection > label {
+  display: block;
+  margin-bottom: 2rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.age-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.age-option {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  backdrop-filter: blur(5px);
+}
+
+.age-option:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #f0a500;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.age-option.selected {
+  background: #f0a500;
+  border-color: #f0a500;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(240, 165, 0, 0.4);
+}
+
+.age-option input[type="radio"] {
+  display: none;
+}
+
+/* Hearing selection - full width */
+.hearing-selection {
+  width: 100%;
+  max-width: 800px;
+}
+
+.hearing-label {
+  display: block;
+  margin-bottom: 2rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.hearing-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
 }
 
 .radio-option {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 300px;
-  font-weight: 500;
+  width: 100%;
+  max-width: 400px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+}
+
+.radio-option:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .radio-option input[type="radio"] {
   margin-left: 1rem;
-  transform: scale(1.3);
+  transform: scale(1.5);
+  cursor: pointer;
 }
 
+/* Continue button positioning */
+#verdervoor {
+  font-size: 1.4rem;
+  padding: 1.2rem 3rem;
+  margin-top: 2rem;
+}
+
+/* Test interface styles */
 #test-interface {
   position: relative;
   height: 100vh;
@@ -93,24 +202,27 @@ body {
   box-sizing: border-box;
 }
 
+#test-interface h2 {
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
 #test-interface .button-row {
-  margin-top: 300px;
+  margin-top: 4rem;
+  gap: 3rem;
+}
+
+#test-interface .button {
+  font-size: 1.3rem;
+  padding: 1.5rem 3rem;
 }
 
 #verdertest {
   position: absolute;
-  bottom: 2rem;
+  bottom: 3rem;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 70px;
-}
-
-#verdervoor {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 25px;
 }
 
 /* Styles for the evaluation page */
