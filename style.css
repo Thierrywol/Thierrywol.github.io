@@ -48,26 +48,3 @@ body {
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   cursor: pointer;
 }
-
-.slider-question {
-  margin-bottom: 20px;
-}
-
-.slider-question label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.slider {
-  width: 100%;
-}
-
-.slider-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9em;
-  color: #555;
-  margin-top: 4px;
-}
-
