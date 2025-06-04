@@ -74,13 +74,22 @@
       <button id="verdervoor" class="button">Verdergaan</button>
     </div>
 
+
     <div id="test-interface" style="display: none;">
       <h2>Komt het geluid van links of van rechts?</h2>
       <div class="button-row">
-        <button class="button">Van links</button>
-        <button class="button">Van rechts</button>
+        <button class="button" id="links-knop">Van links</button>
+        <button class="button" id="rechts-knop">Van rechts</button>
       </div>
-      <button id="verdertest" class="button">Verdergaan</button>
+      
+      <!-- DEBUG -->
+      <div id="debug-info" style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
+        <p>Level: <span id="level-display">0</span></p>
+        <p>Hoek: <span id="hoek-display">90°</span></p>
+      </div>
+      <!-- EINDE DEBUG -->
+      
+      <button id="verdertest" class="button">Test beëindigen</button>
     </div>
 
     <div id="achteraf" style="display: none;">

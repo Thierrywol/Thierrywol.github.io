@@ -1,19 +1,125 @@
-const fragemnten_path = "C:\\Users\\Thierry\\Documents\\Fragmenten";
-const aantal_fragmenten = 5; 
-const metingen = 25; // metingen na eerste stuk
+// Fragmenten pad en test variabelen
+const fragmenten_path = "C:\\Users\\Thierry\\Documents\\Fragmenten";
 
-// Stappen configuratie
-const STAPPEN = {
-    START: [90, 60, 45, 30, 15, 10, 5, 2.5, 2, 1.5, 1, 0.5],
-    BOVEN_60: { min: 60, max: 90, stap: 15 }, 
-    TUSSEN_30_60: { min: 30, max: 60, stap: 5 }, 
-    TUSSEN_15_30: { min: 15, max: 30, stap: 1 }, 
-    ONDER_15: { min: 0.5, max: 15, stap: 0.5 } 
+// Test variabelen
+let huidig_level = 0; // Start level
+let huidige_hoek = 90; // Start hoek (90 graden)
+let huidige_richting = Math.random() < 0.5 ? 'links' : 'rechts'; // Willekeurige start richting
+let huidig_fragment = 1; // Start met fragment 1
+let test_actief = false;
+let huidige_audio = null;
+
+// Level configuratie
+const level_configuratie = {
+  0: { stap_factor: 1/3, max_hoek: 90 },
+  1: { stap_factor: 1/3, max_hoek: 90 },
+  2: { stap_factor: 1/3, max_hoek: 90 },
+  3: { stap_factor: 1/3, max_hoek: 90 },
+  // Level 4 en hoger gebruiken 1/4x
 };
 
-// Leeftijdsopties vooraf
-const ageOptions = document.querySelectorAll('.age-option');
+// Functie om de volgende hoek te berekenen
+function bereken_volgende_hoek(correct) {
+  const config = level_configuratie[huidig_level] || { stap_factor: 1/4, max_hoek: 90 };
+  
+  if (correct) {
+    // Correct antwoord: level omhoog, hoek kleiner maken
+    huidig_level++;
+    huidige_hoek = Math.max(5, huidige_hoek * config.stap_factor);
+  } else {
+    // Fout antwoord: level omlaag (minimum 0), hoek groter maken
+    if (huidig_level > 0) {
+      huidig_level--;
+      const vorige_config = level_configuratie[huidig_level] || { stap_factor: 1/4, max_hoek: 90 };
+      huidige_hoek = Math.min(90, huidige_hoek / vorige_config.stap_factor);
+    }
+  }
+  
+  console.log(`Level: ${huidig_level}, Hoek: ${huidige_hoek.toFixed(2)}°`);
+  
+  // DEBUG: Update display elementen 
+  const levelDisplay = document.getElementById('level-display');
+  const hoekDisplay = document.getElementById('hoek-display');
+  if (levelDisplay) levelDisplay.textContent = huidig_level;
+  if (hoekDisplay) hoekDisplay.textContent = `${huidige_hoek.toFixed(1)}°`;
+  // EINDE DEBUG
+}
 
+// Functie om audio fragment af te spelen
+function speel_fragment() {
+  if (huidige_audio) {
+    huidige_audio.pause();
+    huidige_audio = null;
+  }
+  
+  // Bepaal de bestandsnaam gebaseerd op fragment, richting en hoek
+  const hoek_afgerond = Math.round(huidige_hoek);
+  const bestandsnaam = `fragment${huidig_fragment}_${huidige_richting}_${hoek_afgerond}.wav`;
+  const volledige_pad = `${fragmenten_path}/fragment${huidig_fragment}/${bestandsnaam}`;
+  
+  huidige_audio = new Audio(volledige_pad);
+  
+  huidige_audio.onerror = function() {
+    console.warn(`Audio bestand niet gevonden: ${volledige_pad}`);
+    // Probeer het dichtstbijzijnde beschikbare bestand
+    zoek_dichtstbijzijnde_bestand();
+  };
+  
+  huidige_audio.play().catch(error => {
+    console.error('Fout bij afspelen audio:', error);
+  });
+}
+
+// Functie om het dichtstbijzijnde beschikbare bestand te zoeken
+function zoek_dichtstbijzijnde_bestand() {
+  const mogelijke_hoeken = [90, 75, 60, 45, 30, 15, 10, 5];
+  const huidige_hoek_afgerond = Math.round(huidige_hoek);
+  
+  // Zoek de dichtstbijzijnde beschikbare hoek
+  let beste_hoek = mogelijke_hoeken.reduce((prev, curr) => {
+    return (Math.abs(curr - huidige_hoek_afgerond) < Math.abs(prev - huidige_hoek_afgerond) ? curr : prev);
+  });
+  
+  const bestandsnaam = `fragment${huidig_fragment}_${huidige_richting}_${beste_hoek}.wav`;
+  const volledige_pad = `${fragmenten_path}/fragment${huidig_fragment}/${bestandsnaam}`;
+  
+  huidige_audio = new Audio(volledige_pad);
+  huidige_audio.play().catch(error => {
+    console.error('Fout bij afspelen audio (fallback):', error);
+  });
+}
+
+// Functie om de volgende test vraag voor te bereiden
+function bereid_volgende_vraag_voor() {
+  // Willekeurig fragment kiezen (1-5)
+  huidig_fragment = Math.floor(Math.random() * 5) + 1;
+  
+  // Willekeurige richting kiezen
+  huidige_richting = Math.random() < 0.5 ? 'links' : 'rechts';
+  
+  // Speel het fragment automatisch af
+  setTimeout(() => {
+    speel_fragment();
+  }, 1000); // Vertragging voor betere gebruikerservaring
+}
+
+// Functie om antwoord te verwerken
+function verwerk_antwoord(gekozen_richting) {
+  if (!test_actief) return;
+  
+  const correct = gekozen_richting === huidige_richting;
+  
+  // Bereken volgende hoek
+  bereken_volgende_hoek(correct);
+  
+  // Bereid volgende vraag voor na korte pauze
+  setTimeout(() => {
+    bereid_volgende_vraag_voor();
+  }, 800);
+}
+
+// Event listeners voor leeftijdsopties
+const ageOptions = document.querySelectorAll('.age-option');
 ageOptions.forEach(option => {
   option.addEventListener('click', function() {
     ageOptions.forEach(opt => opt.classList.remove('selected'));
@@ -23,8 +129,8 @@ ageOptions.forEach(option => {
   });
 });
 
+// Event listeners voor gehoor opties
 const radioOptions = document.querySelectorAll('.radio-option');
-
 radioOptions.forEach(option => {
   option.addEventListener('click', function() {
     const radio = this.querySelector('input[type="radio"]');
@@ -51,22 +157,48 @@ document.getElementById('verdervoor').addEventListener('click', function() {
   
   document.getElementById('voorafgaand').style.display = 'none';
   document.getElementById('test-interface').style.display = 'flex';
+  
+  // Start de test
+  test_actief = true;
+  bereid_volgende_vraag_voor();
 });
 
+// Event listeners voor test knoppen
+document.addEventListener('DOMContentLoaded', function() {
+  const testButtons = document.querySelectorAll('#test-interface .button-row .button');
+  
+  testButtons[0].addEventListener('click', function() {
+    verwerk_antwoord('links');
+  });
+  
+  testButtons[1].addEventListener('click', function() {
+    verwerk_antwoord('rechts');
+  });
+});
 
-// Verder knop test
+// Verder knop test (naar evaluatie)
 document.getElementById('verdertest').addEventListener('click', function() {
+  test_actief = false;
+  
+  if (huidige_audio) {
+    huidige_audio.pause();
+    huidige_audio = null;
+  }
+  
   document.getElementById('test-interface').style.display = 'none';
   document.getElementById('achteraf').style.display = 'block';
   document.body.style.overflow = 'auto';
 });
 
-
-// verder knop na test
+// Verder knop na test (verzenden)
 document.getElementById('verderachteraf').addEventListener('click', function() {
   const formData = {
     age: document.querySelector('input[name="age"]:checked')?.value,
     hearing: document.querySelector('input[name="hearing"]:checked')?.value,
+    test_resultaten: {
+      eind_level: huidig_level,
+      eind_hoek: huidige_hoek
+    },
     evaluations: {}
   };
   
@@ -82,12 +214,12 @@ document.getElementById('verderachteraf').addEventListener('click', function() {
     formData.feedback = feedback.value;
   }
   
-  console.log('Form Data:', formData);
+  console.log('Test Data:', formData);
   
   alert('Test verzonden! Bedankt voor uw deelname.');
 });
 
-
+// Toetsenbord navigatie (alleen voor vragenlijsten)
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') {
     const activeElement = document.activeElement;
@@ -102,6 +234,7 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+// Focus styling voor toegankelijkheid
 document.querySelectorAll('.age-option, .radio-option').forEach(element => {
   element.setAttribute('tabindex', '0');
   
