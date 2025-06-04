@@ -1,29 +1,14 @@
-// Adaptive threshold algoritme configuratie
-const FRAGMENTEN_PATH = "C:\\Users\\Thierry\\Documents\\Fragmenten";
-const AANTAL_FRAGMENTEN = 5; 
-const MAX_TRIALS = 50;
-const MIN_REVERSALS = 6; 
+const fragemnten_path = "C:\\Users\\Thierry\\Documents\\Fragmenten";
+const aantal_fragmenten = 5; 
+const metingen = 25; // metingen na eerste stuk
 
-// Drempel configuratie
-const DREMPEL_STAPPEN = {
+// Stappen configuratie
+const STAPPEN = {
     START: [90, 60, 45, 30, 15, 10, 5, 2.5, 2, 1.5, 1, 0.5],
     BOVEN_60: { min: 60, max: 90, stap: 15 }, 
     TUSSEN_30_60: { min: 30, max: 60, stap: 5 }, 
     TUSSEN_15_30: { min: 15, max: 30, stap: 1 }, 
     ONDER_15: { min: 0.5, max: 15, stap: 0.5 } 
-};
-
-// Test state variabelen
-let testState = {
-    huidigFragment: null,
-    huidigeDrempel: 90, 
-    stapIndex: 0,
-    antwoorden: [], 
-    omkeringen: [], 
-    trialNummer: 0,
-    testActief: false,
-    huidigeAudio: null,
-    beschikbareHoeken: [] 
 };
 
 // Leeftijdsopties vooraf
@@ -67,6 +52,7 @@ document.getElementById('verdervoor').addEventListener('click', function() {
   document.getElementById('voorafgaand').style.display = 'none';
   document.getElementById('test-interface').style.display = 'flex';
 });
+
 
 // Verder knop test
 document.getElementById('verdertest').addEventListener('click', function() {
