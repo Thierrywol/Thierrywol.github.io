@@ -1,29 +1,29 @@
 // Adaptive threshold algoritme configuratie
 const FRAGMENTEN_PATH = "C:\\Users\\Thierry\\Documents\\Fragmenten";
-const AANTAL_FRAGMENTEN = 5; // Fragment 1 t/m 5
-const MAX_TRIALS = 50; // Maximum aantal trials
-const MIN_REVERSALS = 6; // Minimum aantal omkeringen voor betrouwbare drempel
+const AANTAL_FRAGMENTEN = 5; 
+const MAX_TRIALS = 50;
+const MIN_REVERSALS = 6; 
 
 // Drempel configuratie
 const DREMPEL_STAPPEN = {
     START: [90, 60, 45, 30, 15, 10, 5, 2.5, 2, 1.5, 1, 0.5],
-    BOVEN_60: { min: 60, max: 90, stap: 15 }, // Tussen 60-90 schommelen
-    TUSSEN_30_60: { min: 30, max: 60, stap: 5 }, // Per 5 graden
-    TUSSEN_15_30: { min: 15, max: 30, stap: 1 }, // Per 1 graad
-    ONDER_15: { min: 0.5, max: 15, stap: 0.5 } // Per 0.5 graden
+    BOVEN_60: { min: 60, max: 90, stap: 15 }, 
+    TUSSEN_30_60: { min: 30, max: 60, stap: 5 }, 
+    TUSSEN_15_30: { min: 15, max: 30, stap: 1 }, 
+    ONDER_15: { min: 0.5, max: 15, stap: 0.5 } 
 };
 
 // Test state variabelen
 let testState = {
     huidigFragment: null,
-    huidigeDrempel: 90, // Start bij 90 graden
+    huidigeDrempel: 90, 
     stapIndex: 0,
-    antwoorden: [], // Historie van antwoorden
-    omkeringen: [], // Punten waar richting verandert
+    antwoorden: [], 
+    omkeringen: [], 
     trialNummer: 0,
     testActief: false,
     huidigeAudio: null,
-    beschikbareHoeken: [] // Beschikbare hoeken voor huidig fragment
+    beschikbareHoeken: [] 
 };
 
 // Leeftijdsopties vooraf
