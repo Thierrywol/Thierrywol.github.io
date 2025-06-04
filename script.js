@@ -9,35 +9,41 @@ let huidig_fragment = 1; // Start met fragment 1
 let test_actief = false;
 let huidige_audio = null;
 
-// Level configuratie
-const level_configuratie = {
-  0: { stap_factor: 1/3, max_hoek: 90 },
-  1: { stap_factor: 1/3, max_hoek: 90 },
-  2: { stap_factor: 1/3, max_hoek: 90 },
-  3: { stap_factor: 1/3, max_hoek: 90 },
-  // Level 4 en hoger gebruiken 1/4x
-};
-
 // Functie om de volgende hoek te berekenen
 function bereken_volgende_hoek(correct) {
-  const config = level_configuratie[huidig_level] || { stap_factor: 1/4, max_hoek: 90 };
-  
   if (correct) {
     // Correct antwoord: level omhoog, hoek kleiner maken
     huidig_level++;
-    huidige_hoek = Math.max(5, huidige_hoek * config.stap_factor);
+    
+    // Bepaal stap factor op basis van level
+    let stap_factor;
+    if (huidig_level <= 3) {
+      stap_factor = 2/3;
+    } else {
+      stap_factor = 3/4;
+    }
+    
+    huidige_hoek = Math.max(1, huidige_hoek * stap_factor); // Minimum 1 graad
   } else {
     // Fout antwoord: level omlaag (minimum 0), hoek groter maken
     if (huidig_level > 0) {
       huidig_level--;
-      const vorige_config = level_configuratie[huidig_level] || { stap_factor: 1/4, max_hoek: 90 };
-      huidige_hoek = Math.min(90, huidige_hoek / vorige_config.stap_factor);
+      
+      // Bepaal stap factor op basis van het nieuwe level
+      let stap_factor;
+      if (huidig_level <= 3) {
+        stap_factor = 2/3;
+      } else {
+        stap_factor = 3/4;
+      }
+      
+      huidige_hoek = Math.min(90, huidige_hoek / stap_factor);
     }
   }
   
   console.log(`Level: ${huidig_level}, Hoek: ${huidige_hoek.toFixed(2)}°`);
   
-  // DEBUG: Update display elementen 
+  // DEBUG: Update display elementen - GEMAKKELIJK TE VERWIJDEREN
   const levelDisplay = document.getElementById('level-display');
   const hoekDisplay = document.getElementById('hoek-display');
   if (levelDisplay) levelDisplay.textContent = huidig_level;
