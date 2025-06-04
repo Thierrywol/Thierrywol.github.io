@@ -66,32 +66,11 @@ function speel_fragment() {
   huidige_audio = new Audio(volledige_pad);
   
   huidige_audio.onerror = function() {
-    console.warn(`Audio bestand niet gevonden: ${volledige_pad}`);
-    // Probeer het dichtstbijzijnde beschikbare bestand
-    zoek_dichtstbijzijnde_bestand();
+    console.error(`Audio bestand niet gevonden: ${volledige_pad}`);
   };
   
   huidige_audio.play().catch(error => {
     console.error('Fout bij afspelen audio:', error);
-  });
-}
-
-// Functie om het dichtstbijzijnde beschikbare bestand te zoeken
-function zoek_dichtstbijzijnde_bestand() {
-  const mogelijke_hoeken = [90, 75, 60, 45, 30, 15, 10, 5];
-  const huidige_hoek_afgerond = Math.round(huidige_hoek);
-  
-  // Zoek de dichtstbijzijnde beschikbare hoek
-  let beste_hoek = mogelijke_hoeken.reduce((prev, curr) => {
-    return (Math.abs(curr - huidige_hoek_afgerond) < Math.abs(prev - huidige_hoek_afgerond) ? curr : prev);
-  });
-  
-  const bestandsnaam = `fragment${huidig_fragment}_${huidige_richting}_${beste_hoek}.wav`;
-  const volledige_pad = `${fragmenten_path}/fragment${huidig_fragment}/${bestandsnaam}`;
-  
-  huidige_audio = new Audio(volledige_pad);
-  huidige_audio.play().catch(error => {
-    console.error('Fout bij afspelen audio (fallback):', error);
   });
 }
 
