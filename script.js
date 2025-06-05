@@ -14,7 +14,7 @@ let huidige_audio = null;
 let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
 const room_conditions = ['small', 'medium', 'large'];
 let room_test_count = 0; // Teller voor aantal tests per room
-const tests_per_room = 10; // Aantal tests per room condition (aanpasbaar)
+const tests_per_room = 30; // Aantal tests per room condition (aanpasbaar)
 
 // Functie om kalibratie fragment af te spelen
 function speel_kalibratie() {
