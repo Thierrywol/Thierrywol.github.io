@@ -76,6 +76,47 @@ body {
   max-width: 1000px;
 }
 
+/* Instruction page styles */
+#instruction-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.instruction-content {
+  text-align: center;
+  max-width: 800px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 3rem;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+#instruction-title {
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  color: white;
+}
+
+#instruction-text {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+#start-test {
+  font-size: 1.4rem;
+  padding: 1.2rem 3rem;
+  margin-top: 1rem;
+}
+
 /* Age selection - full width grid */
 .age-selection {
   width: 100%;

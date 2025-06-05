@@ -1,5 +1,5 @@
 // Fragmenten pad en test variabelen
-const fragmenten_path = "C:\\Users\\Thierry\\Documents\\Fragmenten";
+const fragmenten_path = "C:\\Users\\Thierry\\Documents\\Fragmenten\\processed_fragments";
 
 // Test variabelen
 let huidig_level = 0; // Start level
@@ -52,10 +52,8 @@ function bereken_volgende_hoek(correct) {
   // DEBUG: Update display elementen - GEMAKKELIJK TE VERWIJDEREN
   const levelDisplay = document.getElementById('level-display');
   const hoekDisplay = document.getElementById('hoek-display');
-  const roomDisplay = document.getElementById('room-display');
   if (levelDisplay) levelDisplay.textContent = huidig_level;
   if (hoekDisplay) hoekDisplay.textContent = `${huidige_hoek.toFixed(1)}°`;
-  if (roomDisplay) roomDisplay.textContent = room_conditions[huidige_room_index];
   // EINDE DEBUG
 }
 
@@ -63,33 +61,60 @@ function bereken_volgende_hoek(correct) {
 function ga_naar_volgende_room() {
   huidige_room_index++;
   room_test_count = 0;
-  
+
   if (huidige_room_index >= room_conditions.length) {
     // Alle room conditions zijn doorlopen
     console.log('Alle room conditions voltooid!');
     test_actief = false;
-    
+
     if (huidige_audio) {
       huidige_audio.pause();
       huidige_audio = null;
     }
-    
+
     // Automatisch naar evaluatie scherm
     document.getElementById('test-interface').style.display = 'none';
     document.getElementById('achteraf').style.display = 'block';
     document.body.style.overflow = 'auto';
-    
-    alert(`Test voltooid! Alle ${room_conditions.length} room conditions zijn doorlopen.`);
+
     return true;
   }
-  
-  console.log(`Overschakelen naar room condition: ${room_conditions[huidige_room_index]}`);
-  
-  // Optioneel: reset level en hoek voor nieuwe room condition
-  // huidig_level = 0;
-  // huidige_hoek = 90;
-  
+
+  // reset variabelen voor nieuwe room
+  huidig_level = 0;
+  huidige_hoek = 90;
+
+  console.log(`Overschakelen naar room condition: ${room_conditions[huidige_room_index]} (Level & Hoek gereset)`);
+
+  // DEBUG UI update
+  const levelDisplay = document.getElementById('level-display');
+  const hoekDisplay = document.getElementById('hoek-display');
+  if (levelDisplay) levelDisplay.textContent = huidig_level;
+  if (hoekDisplay) hoekDisplay.textContent = `${huidige_hoek.toFixed(1)}°`;
+  // einde debug
+
+  // Toon instruction page voor volgende room condition
+  toon_instruction_page(false);
+
   return false;
+}
+
+
+// Functie om instruction page te tonen
+function toon_instruction_page(isFirstTime = true) {
+  const instructionTitle = document.getElementById('instruction-title');
+  const instructionText = document.getElementById('instruction-text');
+  
+  if (isFirstTime) {
+    instructionTitle.textContent = 'Instructies voor de test';
+    instructionText.textContent = 'U gaat nu luisteren naar fragmenten, klik op de linker of rechter knop om aan te geven uit welke richting het geluid komt. Als u twijfelt probeer zo goed mogelijk te gokken. Druk op de start knop zodra u klaar bent voor de test.';
+  } else {
+    instructionTitle.textContent = 'Volgende deel van de test';
+    instructionText.textContent = 'Het volgende deel van de test begint zodra u op de start knop drukt.';
+  }
+  
+  document.getElementById('test-interface').style.display = 'none';
+  document.getElementById('instruction-page').style.display = 'block';
 }
 
 // Functie om audio fragment af te spelen
@@ -164,141 +189,166 @@ function verwerk_antwoord(gekozen_richting) {
   }, 800);
 }
 
-// Event listeners voor leeftijdsopties
-const ageOptions = document.querySelectorAll('.age-option');
-ageOptions.forEach(option => {
-  option.addEventListener('click', function() {
-    ageOptions.forEach(opt => opt.classList.remove('selected'));
-    this.classList.add('selected');
-    const radio = this.querySelector('input[type="radio"]');
-    radio.checked = true;
-  });
-});
-
-// Event listeners voor gehoor opties
-const radioOptions = document.querySelectorAll('.radio-option');
-radioOptions.forEach(option => {
-  option.addEventListener('click', function() {
-    const radio = this.querySelector('input[type="radio"]');
-    radio.checked = true;
-    radioOptions.forEach(opt => opt.style.background = 'rgba(255, 255, 255, 0.1)');
-    this.style.background = 'rgba(240, 165, 0, 0.3)';
-  });
-});
-
-// Verder knop eerste vragenlijst
-document.getElementById('verdervoor').addEventListener('click', function() {
-  const ageSelected = document.querySelector('input[name="age"]:checked');
-  const hearingSelected = document.querySelector('input[name="hearing"]:checked');
+// Functie om test te starten vanuit instruction page
+function start_test() {
+  // Verberg instruction page
+  document.getElementById('instruction-page').style.display = 'none';
   
-  if (!ageSelected) {
-    alert('Selecteer alstublieft uw leeftijd.');
-    return;
-  }
-  
-  if (!hearingSelected) {
-    alert('Beantwoord alstublieft de vraag over gehoorvermindering.');
-    return;
-  }
-  
-  document.getElementById('voorafgaand').style.display = 'none';
+  // Toon test interface
   document.getElementById('test-interface').style.display = 'flex';
-  
-  // Reset alle test variabelen
-  huidig_level = 0;
-  huidige_hoek = 90;
-  huidige_room_index = 0;
-  room_test_count = 0;
+  document.body.style.overflow = 'hidden';
   
   // Start de test
   test_actief = true;
   console.log(`Starting test with room condition: ${room_conditions[huidige_room_index]}`);
   bereid_volgende_vraag_voor();
-});
+}
 
-// Event listeners voor test knoppen
+// DOM Content Loaded - Setup alle event listeners
 document.addEventListener('DOMContentLoaded', function() {
+  
+  // Event listeners voor leeftijdsopties
+  const ageOptions = document.querySelectorAll('.age-option');
+  ageOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      ageOptions.forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+      const radio = this.querySelector('input[type="radio"]');
+      radio.checked = true;
+    });
+  });
+
+  // Event listeners voor gehoor opties
+  const radioOptions = document.querySelectorAll('.radio-option');
+  radioOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      const radio = this.querySelector('input[type="radio"]');
+      radio.checked = true;
+      radioOptions.forEach(opt => opt.style.background = 'rgba(255, 255, 255, 0.1)');
+      this.style.background = 'rgba(240, 165, 0, 0.3)';
+    });
+  });
+
+  // Verder knop eerste vragenlijst
+  document.getElementById('verdervoor').addEventListener('click', function() {
+    const ageSelected = document.querySelector('input[name="age"]:checked');
+    const hearingSelected = document.querySelector('input[name="hearing"]:checked');
+    
+    if (!ageSelected) {
+      alert('Selecteer alstublieft uw leeftijd.');
+      return;
+    }
+    
+    if (!hearingSelected) {
+      alert('Beantwoord alstublieft de vraag over gehoorvermindering.');
+      return;
+    }
+    
+    // Verberg voorafgaand formulier
+    document.getElementById('voorafgaand').style.display = 'none';
+    
+    // Reset alle test variabelen
+    huidig_level = 0;
+    huidige_hoek = 90;
+    huidige_room_index = 0;
+    room_test_count = 0;
+    
+    // Toon instruction page voor eerste keer
+    toon_instruction_page(true);
+  });
+
+  // Start test knop op instruction page
+  document.getElementById('start-test').addEventListener('click', function() {
+    start_test();
+  });
+
+  // Event listeners voor test knoppen (links/rechts)
   const testButtons = document.querySelectorAll('#test-interface .button-row .button');
   
-  testButtons[0].addEventListener('click', function() {
-    verwerk_antwoord('links');
-  });
-  
-  testButtons[1].addEventListener('click', function() {
-    verwerk_antwoord('rechts');
-  });
-});
-
-// Verder knop test (naar evaluatie) - nu ook voor handmatige beëindiging
-document.getElementById('verdertest').addEventListener('click', function() {
-  test_actief = false;
-  
-  if (huidige_audio) {
-    huidige_audio.pause();
-    huidige_audio = null;
-  }
-  
-  document.getElementById('test-interface').style.display = 'none';
-  document.getElementById('achteraf').style.display = 'block';
-  document.body.style.overflow = 'auto';
-});
-
-// Verder knop na test (verzenden)
-document.getElementById('verderachteraf').addEventListener('click', function() {
-  const formData = {
-    age: document.querySelector('input[name="age"]:checked')?.value,
-    hearing: document.querySelector('input[name="hearing"]:checked')?.value,
-    test_resultaten: {
-      eind_level: huidig_level,
-      eind_hoek: huidige_hoek,
-      voltooide_rooms: huidige_room_index,
-      laatste_room: room_conditions[Math.min(huidige_room_index, room_conditions.length - 1)]
-    },
-    evaluations: {}
-  };
-  
-  for (let i = 1; i <= 9; i++) {
-    const slider = document.getElementById(`vraag${i}`);
-    if (slider) {
-      formData.evaluations[`vraag${i}`] = slider.value;
-    }
-  }
-  
-  const feedback = document.getElementById('feedback');
-  if (feedback) {
-    formData.feedback = feedback.value;
-  }
-  
-  console.log('Test Data:', formData);
-  
-  alert('Test verzonden! Bedankt voor uw deelname.');
-});
-
-// Toetsenbord navigatie (alleen voor vragenlijsten)
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    const activeElement = document.activeElement;
+  if (testButtons.length >= 2) {
+    testButtons[0].addEventListener('click', function() {
+      verwerk_antwoord('links');
+    });
     
-    if (activeElement.classList.contains('age-option')) {
-      activeElement.click();
+    testButtons[1].addEventListener('click', function() {
+      verwerk_antwoord('rechts');
+    });
+  }
+
+  // Verder knop test (naar evaluatie) - voor handmatige beëindiging
+  document.getElementById('verdertest').addEventListener('click', function() {
+    test_actief = false;
+    
+    if (huidige_audio) {
+      huidige_audio.pause();
+      huidige_audio = null;
     }
     
-    if (activeElement.classList.contains('radio-option')) {
-      activeElement.click();
-    }
-  }
-});
-
-// Focus styling voor toegankelijkheid
-document.querySelectorAll('.age-option, .radio-option').forEach(element => {
-  element.setAttribute('tabindex', '0');
-  
-  element.addEventListener('focus', function() {
-    this.style.outline = '2px solid #f0a500';
-    this.style.outlineOffset = '2px';
+    document.getElementById('test-interface').style.display = 'none';
+    document.getElementById('achteraf').style.display = 'block';
+    document.body.style.overflow = 'auto';
   });
-  
-  element.addEventListener('blur', function() {
-    this.style.outline = 'none';
+
+  // Verder knop na test (verzenden)
+  document.getElementById('verderachteraf').addEventListener('click', function() {
+    const formData = {
+      age: document.querySelector('input[name="age"]:checked')?.value,
+      hearing: document.querySelector('input[name="hearing"]:checked')?.value,
+      test_resultaten: {
+        eind_level: huidig_level,
+        eind_hoek: huidige_hoek,
+        voltooide_rooms: huidige_room_index,
+        laatste_room: room_conditions[Math.min(huidige_room_index, room_conditions.length - 1)]
+      },
+      evaluations: {}
+    };
+    
+    for (let i = 1; i <= 9; i++) {
+      const slider = document.getElementById(`vraag${i}`);
+      if (slider) {
+        formData.evaluations[`vraag${i}`] = slider.value;
+      }
+    }
+    
+    const feedback = document.getElementById('feedback');
+    if (feedback) {
+      formData.feedback = feedback.value;
+    }
+    
+    console.log('Test Data:', formData);
+    
+    alert('Test verzonden! Bedankt voor uw deelname.');
+    
+    // Optioneel: Reset naar begin
+    // location.reload();
+  });
+
+  // Toetsenbord navigatie (alleen voor vragenlijsten)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const activeElement = document.activeElement;
+      
+      if (activeElement.classList.contains('age-option')) {
+        activeElement.click();
+      }
+      
+      if (activeElement.classList.contains('radio-option')) {
+        activeElement.click();
+      }
+    }
+  });
+
+  // Focus styling voor toegankelijkheid
+  document.querySelectorAll('.age-option, .radio-option').forEach(element => {
+    element.setAttribute('tabindex', '0');
+    
+    element.addEventListener('focus', function() {
+      this.style.outline = '2px solid #f0a500';
+      this.style.outlineOffset = '2px';
+    });
+    
+    element.addEventListener('blur', function() {
+      this.style.outline = 'none';
+    });
   });
 });

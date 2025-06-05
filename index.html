@@ -74,6 +74,13 @@
       <button id="verdervoor" class="button">Verdergaan</button>
     </div>
 
+    <div id="instruction-page" style="display: none;">
+      <div class="instruction-content">
+        <h2 id="instruction-title">Instructies voor de test</h2>
+        <p id="instruction-text">U gaat nu luisteren naar fragmenten, klik op de linker of rechter knop om aan te geven uit welke richting het geluid komt. Als u twijfelt probeer zo goed mogelijk te gokken. Druk op de start knop zodra u klaar bent voor de test.</p>
+        <button id="start-test" class="button">Start</button>
+      </div>
+    </div>
 
     <div id="test-interface" style="display: none;">
       <h2>Komt het geluid van links of van rechts?</h2>
@@ -86,6 +93,7 @@
       <div id="debug-info" style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
         <p>Level: <span id="level-display">0</span></p>
         <p>Hoek: <span id="hoek-display">90°</span></p>
+        <p>Progress: <span id="progress-display">small (0/10)</span></p>
       </div>
       <!-- EINDE DEBUG -->
       
