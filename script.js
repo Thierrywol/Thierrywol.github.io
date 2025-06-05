@@ -23,12 +23,8 @@ function speel_kalibratie() {
     kalibratie_audio = null;
   }
   
-  kalibratie_audio = new Audio('kalibratie.wav');
-  
-  kalibratie_audio.onerror = function() {
-    console.error('Kalibratie bestand niet gevonden: kalibratie.wav');
-    alert('Het kalibratiebestand kon niet worden geladen. Controleer of kalibratie.wav beschikbaar is.');
-  };
+  kalibratie_audio = new Audio('processed_fragments/Kalibratie.wav');
+
   
   kalibratie_audio.onended = function() {
     document.getElementById('speel-kalibratie').style.display = 'flex';
