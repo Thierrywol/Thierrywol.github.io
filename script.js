@@ -1,5 +1,5 @@
 // Fragmenten pad en test variabelen
-const fragmenten_path = "C:\\Users\\Thierry\\Documents\\Fragmenten\\processed_fragments";
+const fragmenten_path = "processed_fragments";
 
 // Test variabelen
 let huidig_level = 0; // Start level
@@ -152,8 +152,8 @@ function bereid_volgende_vraag_voor() {
     }
   }
   
-  // Willekeurig fragment kiezen (1-5)
-  huidig_fragment = Math.floor(Math.random() * 5) + 1;
+  // Willekeurig fragment kiezen (1-4)
+  huidig_fragment = Math.floor(Math.random() * 4) + 1;
   
   // Willekeurige richting kiezen
   huidige_richting = Math.random() < 0.5 ? 'links' : 'rechts';
