@@ -15,6 +15,15 @@ const room_conditions = ['small', 'medium', 'large'];
 let room_test_count = 0; // Teller voor aantal tests per room
 const tests_per_room = 10; // Aantal tests per room condition (aanpasbaar)
 
+// Functie om knoppen te verbergen/tonen
+function toon_knoppen(tonen) {
+  const buttonRow = document.querySelector('#test-interface .button-row');
+  if (buttonRow) {
+    buttonRow.style.visibility = tonen ? 'visible' : 'hidden';
+    buttonRow.style.opacity = tonen ? '1' : '0';
+  }
+}
+
 // Functie om de volgende hoek te berekenen
 function bereken_volgende_hoek(correct) {
   if (correct) {
@@ -99,7 +108,6 @@ function ga_naar_volgende_room() {
   return false;
 }
 
-
 // Functie om instruction page te tonen
 function toon_instruction_page(isFirstTime = true) {
   const instructionTitle = document.getElementById('instruction-title');
@@ -114,7 +122,7 @@ function toon_instruction_page(isFirstTime = true) {
   }
   
   document.getElementById('test-interface').style.display = 'none';
-  document.getElementById('instruction-page').style.display = 'block';
+  document.getElementById('instruction-page').style.display = 'flex';
 }
 
 // Functie om audio fragment af te spelen
@@ -123,6 +131,9 @@ function speel_fragment() {
     huidige_audio.pause();
     huidige_audio = null;
   }
+  
+  // Verberg knoppen tijdens het afspelen
+  toon_knoppen(false);
   
   // Bepaal de bestandsnaam gebaseerd op fragment, richting, hoek en room
   const hoek_afgerond = Math.round(huidige_hoek);
@@ -136,10 +147,20 @@ function speel_fragment() {
   
   huidige_audio.onerror = function() {
     console.error(`Audio bestand niet gevonden: ${volledige_pad}`);
+    // Toon knoppen ook bij fout
+    toon_knoppen(true);
+  };
+  
+  // Toon knoppen wanneer audio klaar is
+  huidige_audio.onended = function() {
+    console.log('Audio fragment afgelopen - knoppen worden getoond');
+    toon_knoppen(true);
   };
   
   huidige_audio.play().catch(error => {
     console.error('Fout bij afspelen audio:', error);
+    // Toon knoppen ook bij fout
+    toon_knoppen(true);
   });
 }
 
@@ -161,12 +182,15 @@ function bereid_volgende_vraag_voor() {
   // Speel het fragment automatisch af
   setTimeout(() => {
     speel_fragment();
-  }, 1000); // Vertragging voor betere gebruikerservaring
+  }, 1000); // Vertraaging voor betere gebruikerservaring
 }
 
 // Functie om antwoord te verwerken
 function verwerk_antwoord(gekozen_richting) {
   if (!test_actief) return;
+  
+  // Verberg knoppen direct na klik
+  toon_knoppen(false);
   
   const correct = gekozen_richting === huidige_richting;
   
@@ -218,14 +242,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Event listeners voor gehoor opties
+  // Event listeners voor gehoor opties - UPDATED to match age selection behavior
   const radioOptions = document.querySelectorAll('.radio-option');
   radioOptions.forEach(option => {
     option.addEventListener('click', function() {
+      // Remove selected class from all options
+      radioOptions.forEach(opt => opt.classList.remove('selected'));
+      
+      // Add selected class to clicked option
+      this.classList.add('selected');
+      
+      // Check the radio button
       const radio = this.querySelector('input[type="radio"]');
       radio.checked = true;
-      radioOptions.forEach(opt => opt.style.background = 'rgba(255, 255, 255, 0.1)');
-      this.style.background = 'rgba(240, 165, 0, 0.3)';
     });
   });
 
@@ -274,20 +303,6 @@ document.addEventListener('DOMContentLoaded', function() {
       verwerk_antwoord('rechts');
     });
   }
-
-  // Verder knop test (naar evaluatie) - voor handmatige beëindiging
-  document.getElementById('verdertest').addEventListener('click', function() {
-    test_actief = false;
-    
-    if (huidige_audio) {
-      huidige_audio.pause();
-      huidige_audio = null;
-    }
-    
-    document.getElementById('test-interface').style.display = 'none';
-    document.getElementById('achteraf').style.display = 'block';
-    document.body.style.overflow = 'auto';
-  });
 
   // Verder knop na test (verzenden)
   document.getElementById('verderachteraf').addEventListener('click', function() {
