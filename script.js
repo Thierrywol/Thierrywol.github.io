@@ -9,6 +9,12 @@ let huidig_fragment = 1; // Start met fragment 1
 let test_actief = false;
 let huidige_audio = null;
 
+// Nieuwe variabelen voor room conditions
+let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
+const room_conditions = ['small', 'medium', 'large'];
+let room_test_count = 0; // Teller voor aantal tests per room
+const tests_per_room = 10; // Aantal tests per room condition (aanpasbaar)
+
 // Functie om de volgende hoek te berekenen
 function bereken_volgende_hoek(correct) {
   if (correct) {
@@ -41,14 +47,49 @@ function bereken_volgende_hoek(correct) {
     }
   }
   
-  console.log(`Level: ${huidig_level}, Hoek: ${huidige_hoek.toFixed(2)}°`);
+  console.log(`Level: ${huidig_level}, Hoek: ${huidige_hoek.toFixed(2)}°, Room: ${room_conditions[huidige_room_index]}`);
   
   // DEBUG: Update display elementen - GEMAKKELIJK TE VERWIJDEREN
   const levelDisplay = document.getElementById('level-display');
   const hoekDisplay = document.getElementById('hoek-display');
+  const roomDisplay = document.getElementById('room-display');
   if (levelDisplay) levelDisplay.textContent = huidig_level;
   if (hoekDisplay) hoekDisplay.textContent = `${huidige_hoek.toFixed(1)}°`;
+  if (roomDisplay) roomDisplay.textContent = room_conditions[huidige_room_index];
   // EINDE DEBUG
+}
+
+// Functie om naar de volgende room condition te gaan
+function ga_naar_volgende_room() {
+  huidige_room_index++;
+  room_test_count = 0;
+  
+  if (huidige_room_index >= room_conditions.length) {
+    // Alle room conditions zijn doorlopen
+    console.log('Alle room conditions voltooid!');
+    test_actief = false;
+    
+    if (huidige_audio) {
+      huidige_audio.pause();
+      huidige_audio = null;
+    }
+    
+    // Automatisch naar evaluatie scherm
+    document.getElementById('test-interface').style.display = 'none';
+    document.getElementById('achteraf').style.display = 'block';
+    document.body.style.overflow = 'auto';
+    
+    alert(`Test voltooid! Alle ${room_conditions.length} room conditions zijn doorlopen.`);
+    return true;
+  }
+  
+  console.log(`Overschakelen naar room condition: ${room_conditions[huidige_room_index]}`);
+  
+  // Optioneel: reset level en hoek voor nieuwe room condition
+  // huidig_level = 0;
+  // huidige_hoek = 90;
+  
+  return false;
 }
 
 // Functie om audio fragment af te spelen
@@ -58,10 +99,13 @@ function speel_fragment() {
     huidige_audio = null;
   }
   
-  // Bepaal de bestandsnaam gebaseerd op fragment, richting en hoek
+  // Bepaal de bestandsnaam gebaseerd op fragment, richting, hoek en room
   const hoek_afgerond = Math.round(huidige_hoek);
-  const bestandsnaam = `fragment${huidig_fragment}_${huidige_richting}_${hoek_afgerond}.wav`;
+  const huidige_room = room_conditions[huidige_room_index];
+  const bestandsnaam = `fragment${huidig_fragment}_${huidige_richting}_${hoek_afgerond}_reverb_${huidige_room}.wav`;
   const volledige_pad = `${fragmenten_path}/fragment${huidig_fragment}/${bestandsnaam}`;
+  
+  console.log(`Afspelen: ${bestandsnaam}`);
   
   huidige_audio = new Audio(volledige_pad);
   
@@ -76,6 +120,13 @@ function speel_fragment() {
 
 // Functie om de volgende test vraag voor te bereiden
 function bereid_volgende_vraag_voor() {
+  // Controleer of we genoeg tests hebben gedaan voor de huidige room
+  if (room_test_count >= tests_per_room) {
+    if (ga_naar_volgende_room()) {
+      return; // Test is voltooid
+    }
+  }
+  
   // Willekeurig fragment kiezen (1-5)
   huidig_fragment = Math.floor(Math.random() * 5) + 1;
   
@@ -94,8 +145,18 @@ function verwerk_antwoord(gekozen_richting) {
   
   const correct = gekozen_richting === huidige_richting;
   
+  // Verhoog test teller voor huidige room
+  room_test_count++;
+  
   // Bereken volgende hoek
   bereken_volgende_hoek(correct);
+  
+  // DEBUG: Toon voortgang
+  console.log(`Room: ${room_conditions[huidige_room_index]}, Test ${room_test_count}/${tests_per_room}`);
+  const progressDisplay = document.getElementById('progress-display');
+  if (progressDisplay) {
+    progressDisplay.textContent = `${room_conditions[huidige_room_index]} (${room_test_count}/${tests_per_room})`;
+  }
   
   // Bereid volgende vraag voor na korte pauze
   setTimeout(() => {
@@ -143,8 +204,15 @@ document.getElementById('verdervoor').addEventListener('click', function() {
   document.getElementById('voorafgaand').style.display = 'none';
   document.getElementById('test-interface').style.display = 'flex';
   
+  // Reset alle test variabelen
+  huidig_level = 0;
+  huidige_hoek = 90;
+  huidige_room_index = 0;
+  room_test_count = 0;
+  
   // Start de test
   test_actief = true;
+  console.log(`Starting test with room condition: ${room_conditions[huidige_room_index]}`);
   bereid_volgende_vraag_voor();
 });
 
@@ -161,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Verder knop test (naar evaluatie)
+// Verder knop test (naar evaluatie) - nu ook voor handmatige beëindiging
 document.getElementById('verdertest').addEventListener('click', function() {
   test_actief = false;
   
@@ -182,7 +250,9 @@ document.getElementById('verderachteraf').addEventListener('click', function() {
     hearing: document.querySelector('input[name="hearing"]:checked')?.value,
     test_resultaten: {
       eind_level: huidig_level,
-      eind_hoek: huidige_hoek
+      eind_hoek: huidige_hoek,
+      voltooide_rooms: huidige_room_index,
+      laatste_room: room_conditions[Math.min(huidige_room_index, room_conditions.length - 1)]
     },
     evaluations: {}
   };
