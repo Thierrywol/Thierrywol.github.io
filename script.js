@@ -2,6 +2,7 @@
 const fragmenten_path = "processed_fragments";
 
 // Test variabelen
+let kalibratie_audio = null;
 let huidig_level = 0; // Start level
 let huidige_hoek = 90; // Start hoek (90 graden)
 let huidige_richting = Math.random() < 0.5 ? 'links' : 'rechts'; // Willekeurige start richting
@@ -14,6 +15,44 @@ let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
 const room_conditions = ['small', 'medium', 'large'];
 let room_test_count = 0; // Teller voor aantal tests per room
 const tests_per_room = 10; // Aantal tests per room condition (aanpasbaar)
+
+// Functie om kalibratie fragment af te spelen
+function speel_kalibratie() {
+  if (kalibratie_audio) {
+    kalibratie_audio.pause();
+    kalibratie_audio = null;
+  }
+  
+  kalibratie_audio = new Audio('kalibratie.wav');
+  
+  kalibratie_audio.onerror = function() {
+    console.error('Kalibratie bestand niet gevonden: kalibratie.wav');
+    alert('Het kalibratiebestand kon niet worden geladen. Controleer of kalibratie.wav beschikbaar is.');
+  };
+  
+  kalibratie_audio.onended = function() {
+    document.getElementById('speel-kalibratie').style.display = 'flex';
+    document.getElementById('stop-kalibratie').style.display = 'none';
+  };
+  
+  kalibratie_audio.play().then(() => {
+    document.getElementById('speel-kalibratie').style.display = 'none';
+    document.getElementById('stop-kalibratie').style.display = 'flex';
+  }).catch(error => {
+    console.error('Fout bij afspelen kalibratie audio:', error);
+    alert('Er is een probleem met het afspelen van audio. Controleer uw geluidsinstellingen.');
+  });
+}
+
+// Functie om kalibratie te stoppen
+function stop_kalibratie() {
+  if (kalibratie_audio) {
+    kalibratie_audio.pause();
+    kalibratie_audio = null;
+  }
+  document.getElementById('speel-kalibratie').style.display = 'flex';
+  document.getElementById('stop-kalibratie').style.display = 'none';
+}
 
 // Functie om knoppen te verbergen/tonen
 function toon_knoppen(tonen) {
@@ -256,6 +295,28 @@ document.addEventListener('DOMContentLoaded', function() {
       const radio = this.querySelector('input[type="radio"]');
       radio.checked = true;
     });
+  });
+   // Event listeners voor kalibratie
+  document.getElementById('speel-kalibratie').addEventListener('click', function() {
+    speel_kalibratie();
+  });
+
+  document.getElementById('stop-kalibratie').addEventListener('click', function() {
+    stop_kalibratie();
+  });
+
+  document.getElementById('verder-kalibratie').addEventListener('click', function() {
+    // Stop kalibratie audio als het nog speelt
+    if (kalibratie_audio) {
+      kalibratie_audio.pause();
+      kalibratie_audio = null;
+    }
+    
+    // Verberg kalibratie pagina
+    document.getElementById('kalibratie').style.display = 'none';
+    
+    // Toon vragenlijst
+    document.getElementById('voorafgaand').style.display = 'flex';
   });
 
   // Verder knop eerste vragenlijst

@@ -58,6 +58,76 @@ body {
   box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
 
+/* Kalibratie page styles */
+#kalibratie {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.kalibratie-content {
+  text-align: center;
+  max-width: 700px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 3rem;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.kalibratie-content h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  color: white;
+}
+
+.kalibratie-content p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.audio-controls {
+  margin: 2rem 0;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.kalibratie-instructie {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.kalibratie-lijst {
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto 2rem auto;
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.kalibratie-lijst li {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#verder-kalibratie {
+  margin-top: 2rem;
+  font-size: 1.3rem;
+  padding: 1.2rem 2.5rem;
+}
+
 /* Full width front page styles */
 #voorafgaand {
   padding: 3rem;
