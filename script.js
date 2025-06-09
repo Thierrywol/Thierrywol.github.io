@@ -376,6 +376,8 @@ function verwerk_antwoord(gekozen_richting) {
   if (is_oefenronde) {
     // Verhoog oefenronde teller
     oefenronde_count++;
+    bereken_volgende_hoek(correct);
+    
     console.log(`Oefenronde: ${oefenronde_count}/${oefenronde_tests}`);
   } else {
     // Verhoog test teller voor huidige room
