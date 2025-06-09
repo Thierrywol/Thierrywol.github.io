@@ -10,6 +10,15 @@ let huidig_fragment = 1; // Start met fragment 1
 let test_actief = false;
 let huidige_audio = null;
 
+// Transitie/omslag tracking variabelen 
+let transitions = 0; // Aantal omslagen/transities  
+let stage = 0; // 0 = aanloopfase, 1 = testfase
+let attempts = 0; // Aantal pogingen in huidige fase
+let required_attempts = 1; // Start met 1 voor aanloopfase
+let previous_correct = null; // Houdt vorige antwoord juistheid bij voor omslag detectie
+let test_phase_count = 0; // Tel tests in fase 2 (na 3 omslagen)
+const TESTS_IN_PHASE_2 = 15; // 15 fragmenten in testfase
+
 // Nieuwe variabelen voor room conditions
 let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
 const room_conditions = ['small', 'medium', 'large'];
@@ -66,21 +75,59 @@ function toon_knoppen(tonen) {
 
 // Functie om de volgende hoek te berekenen
 function bereken_volgende_hoek(correct) {
-  if (correct) {
-    // Correct antwoord: level omhoog, hoek kleiner maken
-    huidig_level++;
+  // Detecteer transitie (omslag) - wanneer antwoord juistheid verandert
+  if (previous_correct !== null && previous_correct !== correct) {
+    transitions += 1;
+    console.log(`Transitie ${transitions}: ${previous_correct ? 'goed' : 'fout'} -> ${correct ? 'goed' : 'fout'}`);
     
-    // Bepaal stap factor op basis van level
-    let stap_factor;
-    if (huidig_level <= 3) {
-      stap_factor = 2/3;
+    // Controleer of we naar testfase moeten (stage 1) na 3 omslagen
+    if (transitions >= 3 && stage === 0) {
+      stage = 1;
+      attempts = 0;
+      required_attempts = 2; // 2 goed nodig in testfase
+      test_phase_count = 0; // Reset teller voor fase 2
+      console.log(`Overgaan naar testfase (stage 1) na ${transitions} omslagen`);
+    }
+  }
+  
+  previous_correct = correct;
+  
+  if (correct) {
+    // Juist antwoord
+    attempts += 1;
+    console.log(`Goed! Pogingen: ${attempts}, Vereist: ${required_attempts}, Fase: ${stage}`);
+    
+    // Controleer of genoeg juiste antwoorden om naar hoger level te gaan
+    let should_promote = false;
+    
+    if (stage === 0) {
+      // Aanloopfase: 1 juist antwoord nodig
+      should_promote = (attempts >= 1);
     } else {
-      stap_factor = 3/4;
+      // Testfase: 2 juiste antwoorden nodig  
+      should_promote = (attempts >= 2);
     }
     
-    huidige_hoek = Math.max(1, huidige_hoek * stap_factor); // Minimum 1 graad
+    if (should_promote) {
+      huidig_level++;
+      attempts = 0;
+      
+      // Bepaal stap factor op basis van level
+      let stap_factor;
+      if (huidig_level <= 3) {
+        stap_factor = 2/3;
+      } else {
+        stap_factor = 3/4;
+      }
+      
+      huidige_hoek = Math.max(1, huidige_hoek * stap_factor);
+      
+      console.log(`GEPROMOVEERD naar level ${huidig_level}, hoek: ${huidige_hoek.toFixed(2)}°`);
+    }
   } else {
-    // Fout antwoord: level omlaag (minimum 0), hoek groter maken
+    // Fout antwoord - degraderen naar lager level
+    attempts = 0; // Reset attempts na fout antwoord
+    
     if (huidig_level > 0) {
       huidig_level--;
       
@@ -93,17 +140,25 @@ function bereken_volgende_hoek(correct) {
       }
       
       huidige_hoek = Math.min(90, huidige_hoek / stap_factor);
+      
+      console.log(`GEDEGRADEERD naar level ${huidig_level}, hoek: ${huidige_hoek.toFixed(2)}°`);
     }
   }
   
-  console.log(`Level: ${huidig_level}, Hoek: ${huidige_hoek.toFixed(2)}°, Room: ${room_conditions[huidige_room_index]}, Oefenronde: ${is_oefenronde}`);
+  // In testfase (stage 1): tel aantal fragmenten
+  if (stage === 1) {
+    test_phase_count++;
+    console.log(`Testfase: fragment ${test_phase_count}/${TESTS_IN_PHASE_2}`);
+  }
   
-  // DEBUG: Update display elementen - GEMAKKELIJK TE VERWIJDEREN
+  console.log(`Level: ${huidig_level}, Hoek: ${huidige_hoek.toFixed(2)}°, Fase: ${stage}, Transities: ${transitions}`);
+  
+  // DEBUG: Update display elementen
   const levelDisplay = document.getElementById('level-display');
   const hoekDisplay = document.getElementById('hoek-display');
   if (levelDisplay) levelDisplay.textContent = huidig_level;
   if (hoekDisplay) hoekDisplay.textContent = `${huidige_hoek.toFixed(1)}°`;
-  // EINDE DEBUG
+  
   updateAngleDisplay(huidige_hoek);
 }
 
@@ -162,12 +217,17 @@ function ga_naar_volgende_room() {
 
     return true;
   }
-
-  // reset variabelen voor nieuwe room
+    // Reset alle variabelen voor nieuwe room
   huidig_level = 0;
   huidige_hoek = 90;
+  stage = 0; // Reset naar aanloopfase
+  attempts = 0;
+  required_attempts = 1;
+  transitions = 0;
+  previous_correct = null;
+  test_phase_count = 0;
 
-  console.log(`Overschakelen naar room condition: ${room_conditions[huidige_room_index]} (Level & Hoek gereset)`);
+  console.log(`Overschakelen naar room condition: ${room_conditions[huidige_room_index]} (Alle variabelen gereset)`);
 
   // DEBUG UI update
   const levelDisplay = document.getElementById('level-display');
@@ -339,6 +399,14 @@ function bereid_volgende_vraag_voor() {
       return;
     }
   } else {
+    if (stage === 1 && test_phase_count >= TESTS_IN_PHASE_2) {
+      console.log('Testfase voltooid na 15 fragmenten');
+      if (ga_naar_volgende_room()) {
+        return; // Test is voltooid
+      }
+      return; // Wacht op nieuwe room start
+    }
+    
     // Controleer of we genoeg tests hebben gedaan voor de huidige room
     if (room_test_count >= tests_per_room) {
       if (ga_naar_volgende_room()) {
