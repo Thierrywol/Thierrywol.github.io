@@ -31,39 +31,39 @@
         <div class="age-grid">
           <label class="age-option">
             <input type="radio" name="age" value="18-20">
-            18–19
+            18–20
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="21-30">
-            20–29
+            21–30
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="31-40">
-            30–39
+            31–40
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="41-50">
-            40–49
+            41–50
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="51-60">
-            50–59
+            51–60
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="61-70">
-            60–69
+            61–70
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="71-80">
-            70–79
+            71–80
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="81-90">
-            80–89
+            81–90
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="91-100">
-            90–99
+            91–100
           </label>
         </div>
       </div>
@@ -71,13 +71,13 @@
       <div class="hearing-selection">
         <label class="hearing-label">Ervaart u zelf gehoorvermindering?</label>
         <div class="hearing-options">
-          <label class="radio-option">Ja, door arts vastgesteld
+          <label class="radio-option">Ja, mijn gehoorvermindering is vastgesteld door een arts of audioloog
             <input type="radio" name="hearing" value="arts">
           </label>
-          <label class="radio-option">Ja, zelf ervaren
+          <label class="radio-option">Ja, ik ervaar zelf gehoorvermindering.
             <input type="radio" name="hearing" value="self">
           </label>
-          <label class="radio-option">Nee
+          <label class="radio-option">Nee, ik ervaar geen gehoorproblemen
             <input type="radio" name="hearing" value="no">
           </label>
         </div>
@@ -94,7 +94,6 @@
       </div>
     </div>
 
-    <!-- NEW: Practice Round Start Page -->
     <div id="oefenronde-page" style="display: none;">
       <div class="instruction-content">
         <h2>Oefenronde</h2>
@@ -103,7 +102,6 @@
       </div>
     </div>
 
-    <!-- NEW: Test Start Page -->
     <div id="start-test-page" style="display: none;">
       <div class="instruction-content">
         <h2>Start van de test</h2>
@@ -118,13 +116,8 @@
         <div id="countdown-number" class="countdown-number">3</div>
       </div>      
       <svg width="360" height="210" viewBox="0 0 360 210" id="angleSvg">
-        <!-- Background Half Circle -->
         <path d="M105,180 A75,75 0 0,1 255,180 Z" fill="#e5e5e5" stroke="#ccc" stroke-width="1.5"/>
-
-        <!-- Dynamic Filled Section -->
         <path id="filledSection" d="" fill="#D89E38" stroke="#B8801F" stroke-width="1.5"/>
-
-        <!-- Center line for reference -->
         <line x1="180" y1="105" x2="180" y2="180" stroke="#999" stroke-width="1.5" stroke-dasharray="3,3"/>
       </svg>
       
@@ -145,7 +138,7 @@
 
     <div id="achteraf" style="display: none;">
       <h2>Evaluatie vragenlijst na de muziekperceptietest</h2>
-
+      <p>Bedankt voor uw deelname, u heeft de test succesvol afgerond! We vragen u nu om een korte vragenlijst in te vullen over uw ervaring met de test. Uw feedback helpt ons om de test verder te verbeteren en beter af te stemmen op deelnemers.</p>
       <div class="slider-question">
         <label for="vraag1">1. De instructies voorafgaand aan de test waren duidelijk.</label>
         <div class="slider-container">
@@ -179,23 +172,7 @@
       </div>
 
       <div class="slider-question">
-        <label for="vraag3">3. Hoe goed werkte de test op jouw apparaat?</label>
-        <div class="slider-container">
-          <div class="slider-row">
-            <span class="slider-label-left">Slecht</span>
-            <div class="slider-with-numbers">
-              <input type="range" id="vraag3" name="vraag3" min="1" max="7" value="4" step="1" class="slider">
-              <div class="slider-labels-numbers">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
-              </div>
-            </div>
-            <span class="slider-label-right">Goed</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="slider-question">
-        <label for="vraag4">4. Hoe moeilijk vond u de test?</label>
+        <label for="vraag3">3. Hoe moeilijk vond u de test?</label>
         <div class="slider-container">
           <div class="slider-row">
             <span class="slider-label-left">Makkelijk</span>
@@ -211,7 +188,7 @@
       </div>
 
       <div class="slider-question">
-        <label for="vraag5">5. Hoe overzichtelijk vond u de opzet van de test?</label>
+        <label for="vraag4">4. Hoe overzichtelijk vond u de opzet van de test?</label>
         <div class="slider-container">
           <div class="slider-row">
             <span class="slider-label-left">Verwarrend</span>
@@ -227,7 +204,7 @@
       </div>
 
       <div class="slider-question">
-        <label for="vraag6">6. Hoe vond u de lengte van de test?</label>
+        <label for="vraag5">5. Hoe vond u de lengte van de test?</label>
         <div class="slider-container">
           <div class="slider-row">
             <span class="slider-label-left">Te kort</span>
@@ -243,7 +220,7 @@
       </div>
 
       <div class="slider-question">
-        <label for="vraag7">7. Hoe beoordeelt u de geluidskwaliteit van de fragmenten?</label>
+        <label for="vraag6">6. Hoe beoordeelt u de geluidskwaliteit van de fragmenten?</label>
         <div class="slider-container">
           <div class="slider-row">
             <span class="slider-label-left">Slecht</span>
@@ -259,7 +236,7 @@
       </div>
 
       <div class="slider-question">
-        <label for="vraag8">8. Hoe gebruiksvriendelijk vond u de testomgeving (bijv. website/interface)?</label>
+        <label for="vraag7">7. Hoe gebruiksvriendelijk vond u de testomgeving (bijv. website/interface)?</label>
         <div class="slider-container">
           <div class="slider-row">
             <span class="slider-label-left">Onvriendelijk</span>
@@ -275,7 +252,7 @@
       </div>
 
       <div class="slider-question">
-        <label for="vraag9">9. Zou u deze test aanbevelen aan anderen?</label>
+        <label for="vraag8">8. Kunt u in het dagelijks leven goed horen uit welke richting geluid komt?</label>
         <div class="slider-container">
           <div class="slider-row">
             <span class="slider-label-left">Zeker niet</span>
@@ -291,7 +268,56 @@
       </div>
 
       <div class="slider-question">
-        <label for="feedback">10. Heeft u nog feedback over de test die u graag wilt delen?</label>
+        <label for="vraag9">9. Hoeveel moeite had u met het bepalen van de richting van het geluid door galm in de fragmenten die u zojuist heeft gehoord?</label>
+        <div class="slider-container">
+          <div class="slider-row">
+            <span class="slider-label-left">Geen moeite</span>
+            <div class="slider-with-numbers">
+              <input type="range" id="vraag9" name="vraag9" min="1" max="7" value="4" step="1" class="slider">
+              <div class="slider-labels-numbers">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+              </div>
+            </div>
+            <span class="slider-label-right">Veel moeite</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slider-question">
+        <label for="vraag10">10. In hoeverre heeft u in het dagelijks leven moeite om te bepalen waar geluid vandaan komt?</label>
+        <div class="slider-container">
+          <div class="slider-row">
+            <span class="slider-label-left">Helemaal niet</span>
+            <div class="slider-with-numbers">
+              <input type="range" id="vraag9" name="vraag9" min="1" max="7" value="4" step="1" class="slider">
+              <div class="slider-labels-numbers">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+              </div>
+            </div>
+            <span class="slider-label-right">Veel moeite</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slider-question">
+        <label for="vraag11">11. In hoeverre leek het geluidsfragment op een realistische locatie in de ruimte aanwezig te zijn?</label>
+        <div class="slider-container">
+          <div class="slider-row">
+            <span class="slider-label-left">Totaal niet realistisch</span>
+            <div class="slider-with-numbers">
+              <input type="range" id="vraag9" name="vraag9" min="1" max="7" value="4" step="1" class="slider">
+              <div class="slider-labels-numbers">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+              </div>
+            </div>
+            <span class="slider-label-right">Zeer realistisch</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="slider-question">
+        <label for="feedback">12. Heeft u nog feedback over de test die u graag wilt delen?</label>
         <div class="feedback-container">
           <textarea id="feedback" name="feedback" rows="3" placeholder="Typ hier uw feedback..."></textarea>
         </div>
