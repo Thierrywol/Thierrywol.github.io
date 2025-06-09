@@ -16,6 +16,11 @@ const room_conditions = ['small', 'medium', 'large'];
 let room_test_count = 0; // Teller voor aantal tests per room
 const tests_per_room = 3; // Aantal tests per room condition (aanpasbaar)
 
+// Nieuwe variabelen voor oefenronde
+let is_oefenronde = false;
+let oefenronde_count = 0;
+const oefenronde_tests = 3; // Aantal oefenvragen
+
 // Functie om kalibratie fragment af te spelen
 function speel_kalibratie() {
   if (kalibratie_audio) {
@@ -91,7 +96,7 @@ function bereken_volgende_hoek(correct) {
     }
   }
   
-  console.log(`Level: ${huidig_level}, Hoek: ${huidige_hoek.toFixed(2)}°, Room: ${room_conditions[huidige_room_index]}`);
+  console.log(`Level: ${huidig_level}, Hoek: ${huidige_hoek.toFixed(2)}°, Room: ${room_conditions[huidige_room_index]}, Oefenronde: ${is_oefenronde}`);
   
   // DEBUG: Update display elementen - GEMAKKELIJK TE VERWIJDEREN
   const levelDisplay = document.getElementById('level-display');
@@ -172,26 +177,60 @@ function ga_naar_volgende_room() {
   // einde debug
 
   // Toon instruction page voor volgende room condition
-  toon_instruction_page(false);
+  toon_instruction_page_between_parts();
 
   return false;
 }
 
-// Functie om instruction page te tonen
+// Functie om instruction page te tonen (eerste keer)
 function toon_instruction_page(isFirstTime = true) {
   const instructionTitle = document.getElementById('instruction-title');
   const instructionText = document.getElementById('instruction-text');
   
-  if (isFirstTime) {
-    instructionTitle.textContent = 'Instructies voor de test';
-    instructionText.textContent = 'U gaat nu luisteren naar fragmenten, klik op de linker of rechter knop om aan te geven uit welke richting het geluid komt. Als u twijfelt probeer zo goed mogelijk te gokken. Druk op de start knop zodra u klaar bent voor de test.';
-  } else {
-    instructionTitle.textContent = 'Volgende deel van de test';
-    instructionText.textContent = 'Het volgende deel van de test begint zodra u op de start knop drukt.';
-  }
+  instructionTitle.textContent = 'Instructies voor de test';
+  instructionText.textContent = 'De test duurt ongeveer 30 minuten en bestaat uit drie onderdelen. Elk onderdeel bevat 30 vragen. We beginnen met een korte introductie waarin u het volledige geluid te horen krijgt, gevolgd door drie oefenvragen. Deze oefenvragen zijn bedoeld om u vertrouwd te maken met de testprocedure en tellen niet mee voor uw uiteindelijke resultaat. Tijdens de test hoort u steeds een geluidsfragment via de hoofdtelefoon. Uw taak is om aan te geven van welke kant (links of rechts) het geluid komt. Naarmate u vaker het juiste antwoord geeft, wordt de test geleidelijk moeilijker. Zo kunnen we nauwkeurig bepalen hoe goed u richtingsgeluid kunt waarnemen. We vragen u om zich tijdens de test zo goed mogelijk te concentreren op de geluiden. Het is normaal als sommige fragmenten moeilijk te horen zijn, twijfel hoort erbij. Vertrouw op uw gehoor en kies altijd een antwoord, ook als u niet zeker bent.';
   
   document.getElementById('test-interface').style.display = 'none';
   document.getElementById('instruction-page').style.display = 'flex';
+  document.getElementById('oefenronde-page').style.display = 'none';
+  document.getElementById('start-test-page').style.display = 'none';
+}
+
+// Functie om instruction page tussen onderdelen te tonen
+function toon_instruction_page_between_parts() {
+  const instructionTitle = document.getElementById('instruction-title');
+  const instructionText = document.getElementById('instruction-text');
+  
+  let partNumber = '';
+  if (huidige_room_index === 1) {
+    partNumber = 'tweede';
+  } else if (huidige_room_index === 2) {
+    partNumber = 'derde';
+  }
+  
+  instructionTitle.textContent = 'Volgende deel van de test';
+  instructionText.textContent = `U heeft het eerste deel van de test afgerond. We gaan nu verder met het ${partNumber} onderdeel. Ook hier hoort u steeds een geluidsfragment via de hoofdtelefoon en geeft u aan van welke kant het geluid komt. Klik op "Doorgaan" om verder te gaan.`;
+  
+  document.getElementById('test-interface').style.display = 'none';
+  document.getElementById('instruction-page').style.display = 'flex';
+  document.getElementById('oefenronde-page').style.display = 'none';
+  document.getElementById('start-test-page').style.display = 'none';
+}
+
+// Functie om oefenronde page te tonen
+function toon_oefenronde_page() {
+  document.getElementById('instruction-page').style.display = 'none';
+  document.getElementById('oefenronde-page').style.display = 'flex';
+  document.getElementById('start-test-page').style.display = 'none';
+  document.getElementById('test-interface').style.display = 'none';
+}
+
+// Functie om start test page te tonen
+function toon_start_test_page() {
+  document.getElementById('instruction-page').style.display = 'none';
+  document.getElementById('oefenronde-page').style.display = 'none';
+  document.getElementById('start-test-page').style.display = 'flex';
+  document.getElementById('test-interface').style.display = 'none';
 }
 
 // Functie om audio fragment af te spelen
@@ -204,13 +243,16 @@ function speel_fragment() {
   // Verberg knoppen tijdens het afspelen
   toon_knoppen(false);
   
+  // Bepaal fragment nummer (5 voor oefenronde, 1-4 voor echte test)
+  const fragment_nummer = is_oefenronde ? 5 : huidig_fragment;
+  
   // Bepaal de bestandsnaam gebaseerd op fragment, richting, hoek en room
   const hoek_afgerond = Math.round(huidige_hoek);
   const huidige_room = room_conditions[huidige_room_index];
-  const bestandsnaam = `fragment${huidig_fragment}_${huidige_richting}_${hoek_afgerond}_reverb_${huidige_room}.wav`;
-  const volledige_pad = `${fragmenten_path}/fragment${huidig_fragment}/${bestandsnaam}`;
+  const bestandsnaam = `fragment${fragment_nummer}_${huidige_richting}_${hoek_afgerond}_reverb_${huidige_room}.wav`;
+  const volledige_pad = `${fragmenten_path}/fragment${fragment_nummer}/${bestandsnaam}`;
   
-  console.log(`Afspelen: ${bestandsnaam}`);
+  console.log(`Afspelen: ${bestandsnaam} (Oefenronde: ${is_oefenronde})`);
   
   huidige_audio = new Audio(volledige_pad);
   
@@ -281,16 +323,35 @@ function bereid_volgende_vraag_voor() {
     return;
   }
   
-  // Controleer of we genoeg tests hebben gedaan voor de huidige room
-  if (room_test_count >= tests_per_room) {
-    if (ga_naar_volgende_room()) {
-      return; // Test is voltooid
+  // Check of we in oefenronde zijn
+  if (is_oefenronde) {
+    if (oefenronde_count >= oefenronde_tests) {
+      // Oefenronde voltooid, ga naar start test page
+      is_oefenronde = false;
+      oefenronde_count = 0;
+      test_actief = false;
+      
+      // Reset test variabelen voor echte test
+      huidig_level = 0;
+      huidige_hoek = 90;
+      
+      toon_start_test_page();
+      return;
     }
-    return; // Wacht op nieuwe room start
+  } else {
+    // Controleer of we genoeg tests hebben gedaan voor de huidige room
+    if (room_test_count >= tests_per_room) {
+      if (ga_naar_volgende_room()) {
+        return; // Test is voltooid
+      }
+      return; // Wacht op nieuwe room start
+    }
   }
   
-  // Willekeurig fragment kiezen (1-4)
-  huidig_fragment = Math.floor(Math.random() * 4) + 1;
+  // Willekeurig fragment kiezen (1-4 voor echte test, 5 is al ingesteld voor oefenronde)
+  if (!is_oefenronde) {
+    huidig_fragment = Math.floor(Math.random() * 4) + 1;
+  }
   
   // Willekeurige richting kiezen
   huidige_richting = Math.random() < 0.5 ? 'links' : 'rechts';
@@ -312,17 +373,23 @@ function verwerk_antwoord(gekozen_richting) {
   
   const correct = gekozen_richting === huidige_richting;
   
-  // Verhoog test teller voor huidige room
-  room_test_count++;
-  
-  // Bereken volgende hoek
-  bereken_volgende_hoek(correct);
-  
-  // DEBUG: Toon voortgang
-  console.log(`Room: ${room_conditions[huidige_room_index]}, Test ${room_test_count}/${tests_per_room}`);
-  const progressDisplay = document.getElementById('progress-display');
-  if (progressDisplay) {
-    progressDisplay.textContent = `${room_conditions[huidige_room_index]} (${room_test_count}/${tests_per_room})`;
+  if (is_oefenronde) {
+    // Verhoog oefenronde teller
+    oefenronde_count++;
+    console.log(`Oefenronde: ${oefenronde_count}/${oefenronde_tests}`);
+  } else {
+    // Verhoog test teller voor huidige room
+    room_test_count++;
+    
+    // Bereken volgende hoek (alleen voor echte test)
+    bereken_volgende_hoek(correct);
+    
+    // DEBUG: Toon voortgang
+    console.log(`Room: ${room_conditions[huidige_room_index]}, Test ${room_test_count}/${tests_per_room}`);
+    const progressDisplay = document.getElementById('progress-display');
+    if (progressDisplay) {
+      progressDisplay.textContent = `${room_conditions[huidige_room_index]} (${room_test_count}/${tests_per_room})`;
+    }
   }
   
   // Bereid volgende vraag voor na korte pauze
@@ -331,7 +398,35 @@ function verwerk_antwoord(gekozen_richting) {
   }, 800);
 }
 
-// Functie om test te starten vanuit instruction page
+// Functie om oefenronde te starten
+function start_oefenronde() {
+  // Verberg oefenronde page
+  document.getElementById('oefenronde-page').style.display = 'none';
+  
+  // Toon test interface
+  document.getElementById('test-interface').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  
+  // Initialize practice round variables
+  is_oefenronde = true;
+  oefenronde_count = 0;
+  test_actief = true;
+  
+  // Initialize level and angle for practice (same as main test)
+  huidig_level = 0;
+  huidige_hoek = 90;
+  
+  // Update debug display if it exists
+  const levelDisplay = document.getElementById('level-display');
+  const hoekDisplay = document.getElementById('hoek-display');
+  if (levelDisplay) levelDisplay.textContent = huidig_level;
+  if (hoekDisplay) hoekDisplay.textContent = `${huidige_hoek.toFixed(1)}°`;
+  
+  console.log('Starting oefenronde with level/angle tracking');
+  bereid_volgende_vraag_voor();
+}
+
+// Functie om test te starten vanuit instruction page (voor vervolgdelen)
 function start_test() {
   // Verberg instruction page
   document.getElementById('instruction-page').style.display = 'none';
@@ -339,6 +434,8 @@ function start_test() {
   // Toon test interface
   document.getElementById('test-interface').style.display = 'flex';
   document.body.style.overflow = 'hidden';
+
+  document.getElementById('start-test-page').style.display = 'none';
   
   // Start de test
   test_actief = true;
@@ -447,13 +544,32 @@ document.addEventListener('DOMContentLoaded', function() {
     huidige_hoek = 90;
     huidige_room_index = 0;
     room_test_count = 0;
+    is_oefenronde = false;
+    oefenronde_count = 0;
     
     // Toon instruction page voor eerste keer
     toon_instruction_page(true);
   });
 
-  // Start test knop op instruction page
+  // Start test knop op instruction page (alleen voor eerste keer)
   document.getElementById('start-test').addEventListener('click', function() {
+    // Check if this is the first time or continuation
+    if (huidige_room_index === 0 && room_test_count === 0) {
+      // Eerste keer: ga naar oefenronde
+      toon_oefenronde_page();
+    } else {
+      // Vervolgdelen: start direct test
+      start_test();
+    }
+  });
+
+  // Start oefenronde knop
+  document.getElementById('start-oefenronde').addEventListener('click', function() {
+    start_oefenronde();
+  });
+
+  // Start echte test knop
+  document.getElementById('start-echte-test').addEventListener('click', function() {
     start_test();
   });
 

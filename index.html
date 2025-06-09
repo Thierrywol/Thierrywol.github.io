@@ -14,6 +14,7 @@
     <div id="kalibratie" style="display: flex;">
       <div class="kalibratie-content">
         <h2>Volume kalibratie</h2>
+        <p>Voordat we beginnen, is het belangrijk dat het geluidsvolume goed is ingesteld en dat uw koptelefoon goed op uw hoofd zit. Gebruikt u een gehoorapparaat? Dan vragen we u dit tijdelijk uit te doen, zodat we uw natuurlijke gehoor kunnen meten. Speel het testfragment af en zorg dat u het goed kunt horen: niet te zacht, maar ook niet oncomfortabel luid.  Bent u tevreden over het volume en hoe de koptelefoon zit? Klik dan op 'Volume is goed ingesteld - Verder' om door te gaan.</p>
         <div class="audio-controls">
           <button id="speel-kalibratie" class="button">Speel testfragment</button>
           <button id="stop-kalibratie" class="button" style="display: none;">Stop fragment</button>
@@ -23,46 +24,46 @@
     </div>
 
     <div id="voorafgaand" style="display: none;">
-      <h2>Vragenlijst voorafgaand de muziekperceptietest</h2>
+      <p>Voor we starten met de test stellen we u enkele korte vragen over uw leeftijd en gehoor. Deze informatie helpt ons om de resultaten van de muziekperceptietest beter te begrijpen.</p>
       
       <div class="age-selection">
         <label>Wat is uw leeftijd (in jaren)?</label>
         <div class="age-grid">
           <label class="age-option">
             <input type="radio" name="age" value="18-20">
-            18–20
+            18–19
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="21-30">
-            21–30
+            20–29
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="31-40">
-            31–40
+            30–39
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="41-50">
-            41–50
+            40–49
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="51-60">
-            51–60
+            50–59
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="61-70">
-            61–70
+            60–69
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="71-80">
-            71–80
+            70–79
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="81-90">
-            81–90
+            80–89
           </label>
           <label class="age-option">
             <input type="radio" name="age" value="91-100">
-            91–100
+            90–99
           </label>
         </div>
       </div>
@@ -88,8 +89,26 @@
     <div id="instruction-page" style="display: none;">
       <div class="instruction-content">
         <h2 id="instruction-title">Instructies voor de test</h2>
-        <p id="instruction-text">U gaat nu luisteren naar fragmenten, klik op de linker of rechter knop om aan te geven uit welke richting het geluid komt. Als u twijfelt probeer zo goed mogelijk te gokken. Druk op de start knop zodra u klaar bent voor de test.</p>
-        <button id="start-test" class="button">Start</button>
+          <p id="instruction-text">De test duurt ongeveer 30 minuten en bestaat uit drie onderdelen. Elk onderdeel bevat 30 vragen. We beginnen met een korte introductie waarin u het volledige geluid te horen krijgt, gevolgd door drie oefenvragen. Deze oefenvragen zijn bedoeld om u vertrouwd te maken met de testprocedure en tellen niet mee voor uw uiteindelijke resultaat. Tijdens de test hoort u steeds een geluidsfragment via de hoofdtelefoon. Uw taak is om aan te geven van welke kant (links of rechts) het geluid komt. Naarmate u vaker het juiste antwoord geeft, wordt de test geleidelijk moeilijker. Zo kunnen we nauwkeurig bepalen hoe goed u richtingsgeluid kunt waarnemen. We vragen u om zich tijdens de test zo goed mogelijk te concentreren op de geluiden. Het is normaal als sommige fragmenten moeilijk te horen zijn, twijfel hoort erbij. Vertrouw op uw gehoor en kies altijd een antwoord, ook als u niet zeker bent.</p>
+        <button id="start-test" class="button">Doorgaan</button>
+      </div>
+    </div>
+
+    <!-- NEW: Practice Round Start Page -->
+    <div id="oefenronde-page" style="display: none;">
+      <div class="instruction-content">
+        <h2>Oefenronde</h2>
+        <p>U gaat nu beginnen met de oefenronde. Probeer rustig te luisteren en te wennen aan de geluiden. Na deze oefenronde begint de echte test. Klik op "Doorgaan" om te starten.</p>
+        <button id="start-oefenronde" class="button">Doorgaan</button>
+      </div>
+    </div>
+
+    <!-- NEW: Test Start Page -->
+    <div id="start-test-page" style="display: none;">
+      <div class="instruction-content">
+        <h2>Start van de test</h2>
+        <p>U heeft de oefenronde afgerond. We gaan nu verder met de echte test. Deze ronde bestaat uit 30 vragen. Probeer u goed te concentreren en geef bij elk fragment aan van welke kant u denkt dat het geluid komt: links of rechts. Vertrouw op uw gehoor, ook als u twijfelt. Klik op "Doorgaan" om te beginnen met de test.</p>
+        <button id="start-echte-test" class="button">Doorgaan</button>
       </div>
     </div>
 

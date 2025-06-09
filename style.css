@@ -128,23 +128,169 @@ body {
   padding: 1.2rem 2.5rem;
 }
 
-/* Full width front page styles */
+/* Updated voorafgaand page styles - fixing sizing issues */
 #voorafgaand {
-  padding: 3rem;
+  padding: 2rem;
   text-align: center;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 3rem;
+  gap: 2.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-#voorafgaand h2 {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  max-width: 1000px;
+#voorafgaand > p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  max-width: 800px;
+  margin-bottom: 1rem;
+}
+
+/* Age selection - improved responsive grid */
+.age-selection {
+  width: 100%;
+  max-width: 900px;
+}
+
+.age-selection > label {
+  display: block;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  color: white;
+}
+
+.age-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.age-option {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  backdrop-filter: blur(5px);
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.age-option:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #f0a500;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.age-option.selected {
+  background: #f0a500;
+  border-color: #f0a500;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(240, 165, 0, 0.4);
+}
+
+.age-option input[type="radio"] {
+  display: none;
+}
+
+/* Hearing selection - matching width with age selection */
+.hearing-selection {
+  width: 100%;
+  max-width: 900px;
+}
+
+.hearing-label {
+  display: block;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  color: white;
+}
+
+.hearing-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.radio-option {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  backdrop-filter: blur(5px);
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radio-option:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #f0a500;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.radio-option.selected {
+  background: #f0a500;
+  border-color: #f0a500;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(240, 165, 0, 0.4);
+}
+
+.radio-option input[type="radio"] {
+  display: none;
+}
+
+/* Continue button */
+#verdervoor {
+  font-size: 1.3rem;
+  padding: 1rem 2.5rem;
+  margin-top: 1rem;
+  background-color: #f0a500;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  font-weight: 600;
+}
+
+#verdervoor:hover {
+  background-color: #e09400;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
 
 /* Instruction page styles */
@@ -182,134 +328,26 @@ body {
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
+#oefenronde-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+#start-test-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
 #start-test {
   font-size: 1.4rem;
   padding: 1.2rem 3rem;
   margin-top: 1rem;
-}
-
-/* Age selection - full width grid */
-.age-selection {
-  width: 100%;
-  max-width: 1200px;
-}
-
-.age-selection > label {
-  display: block;
-  margin-bottom: 2rem;
-  font-size: 1.6rem;
-  font-weight: 600;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-
-.age-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.age-option {
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 1.5rem 2rem;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.3rem;
-  font-weight: 600;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-  backdrop-filter: blur(5px);
-}
-
-.age-option:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: #f0a500;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-}
-
-.age-option.selected {
-  background: #f0a500;
-  border-color: #f0a500;
-  color: white;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(240, 165, 0, 0.4);
-}
-
-.age-option input[type="radio"] {
-  display: none;
-}
-
-/* Hearing selection - full width */
-.hearing-selection {
-  width: 100%;
-  max-width: 800px;
-}
-
-.hearing-label {
-  display: block;
-  margin-bottom: 2rem;
-  font-size: 1.6rem;
-  font-weight: 600;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-
-.hearing-options {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: center;
-}
-
-.radio-option {
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 1.5rem 2rem;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.3rem;
-  font-weight: 600;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-  backdrop-filter: blur(5px);
-  width: 100%;
-  max-width: 400px;
-  display: block; /* Changed from flex */
-  justify-content: center; /* Removed - not needed with block */
-  align-items: center; /* Removed - not needed with block */
-}
-
-.radio-option:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: #f0a500;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-}
-
-.radio-option.selected {
-  background: #f0a500;
-  border-color: #f0a500;
-  color: white;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(240, 165, 0, 0.4);
-}
-
-.radio-option input[type="radio"] {
-  display: none; /* Hide the radio button completely */
-}
-
-/* Continue button positioning */
-#verdervoor {
-  font-size: 1.4rem;
-  padding: 1.2rem 3rem;
-  margin-top: 2rem;
 }
 
 /* Test interface styles */
