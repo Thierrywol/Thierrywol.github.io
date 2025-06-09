@@ -99,7 +99,47 @@ function bereken_volgende_hoek(correct) {
   if (levelDisplay) levelDisplay.textContent = huidig_level;
   if (hoekDisplay) hoekDisplay.textContent = `${huidige_hoek.toFixed(1)}°`;
   // EINDE DEBUG
+  updateAngleDisplay(huidige_hoek);
 }
+
+function updateAngleDisplay(angle) {
+  const filledSection = document.getElementById('filledSection');
+  if (!filledSection) return;
+
+  const centerX = 180;
+  const centerY = 180;
+  const radius = 75;
+
+  // Arc from -angle to +angle
+  const startAngleDeg = -angle;
+  const endAngleDeg = angle;
+
+  // Convert to radians and rotate –90° so 0° points up
+  const startRad = (startAngleDeg - 90) * Math.PI / 180;
+  const endRad = (endAngleDeg - 90) * Math.PI / 180;
+
+  const startX = centerX + radius * Math.cos(startRad);
+  const startY = centerY + radius * Math.sin(startRad);
+  const endX = centerX + radius * Math.cos(endRad);
+  const endY = centerY + radius * Math.sin(endRad);
+
+  const largeArcFlag = (2 * angle) > 180 ? 1 : 0;
+
+  const pathData = `
+    M ${centerX},${centerY}
+    L ${startX},${startY}
+    A ${radius},${radius} 0 ${largeArcFlag},1 ${endX},${endY}
+    Z
+  `;
+
+  filledSection.setAttribute('d', pathData.trim());
+
+  console.log(`Arc from ${startAngleDeg}° to ${endAngleDeg}° (span = ${2 * angle}°)`);
+}
+
+
+
+
 
 // Functie om naar de volgende room condition te gaan
 function ga_naar_volgende_room() {
@@ -197,6 +237,8 @@ function speel_fragment() {
     // Toon knoppen ook bij fout
     toon_knoppen(true);
   });
+
+  updateAngleDisplay(huidige_hoek);
 }
 
 // Functie om de volgende test vraag voor te bereiden
@@ -261,6 +303,7 @@ function start_test() {
   test_actief = true;
   console.log(`Starting test with room condition: ${room_conditions[huidige_room_index]}`);
   bereid_volgende_vraag_voor();
+
 }
 
 // DOM Content Loaded - Setup alle event listeners

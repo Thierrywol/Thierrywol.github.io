@@ -95,16 +95,27 @@
 
     <div id="test-interface" style="display: none;">
       <h2>Komt het geluid van links of van rechts?</h2>
+      <svg width="360" height="210" viewBox="0 0 360 210" id="angleSvg">
+        <!-- Background Half Circle -->
+        <path d="M105,180 A75,75 0 0,1 255,180 Z" fill="#e5e5e5" stroke="#ccc" stroke-width="1.5"/>
+
+        <!-- Dynamic Filled Section -->
+        <path id="filledSection" d="" fill="#D89E38" stroke="#B8801F" stroke-width="1.5"/>
+
+        <!-- Center line for reference -->
+        <line x1="180" y1="105" x2="180" y2="180" stroke="#999" stroke-width="1.5" stroke-dasharray="3,3"/>
+      </svg>
+      
       <div class="button-row">
         <button class="button" id="links-knop">Van links</button>
         <button class="button" id="rechts-knop">Van rechts</button>
       </div>
-      
+
       <!-- DEBUG --
       <div id="debug-info" style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
         <p>Level: <span id="level-display">0</span></p>
         <p>Hoek: <span id="hoek-display">90°</span></p>
-        <p>Progress: <span id="progress-display">small (0/10)</span></p>
+        <p>Progress: <span id="progress-display">small (0/3)</span></p>
       </div>
       -- EINDE DEBUG -->
       
