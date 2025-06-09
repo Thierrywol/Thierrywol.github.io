@@ -23,7 +23,7 @@ const TESTS_IN_PHASE_2 = 15; // 15 fragmenten in testfase
 let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
 const room_conditions = ['small', 'medium', 'large'];
 let room_test_count = 0; // Teller voor aantal tests per room
-const tests_per_room = 15; // Aantal tests per room condition (aanpasbaar)
+const tests_per_room = 40; // Aantal tests per room condition (aanpasbaar)
 
 // Nieuwe variabelen voor oefenronde
 let is_oefenronde = false;
@@ -115,34 +115,35 @@ function bereken_volgende_hoek(correct) {
       // Bepaal stap factor op basis van level
       let stap_factor;
       if (huidig_level <= 3) {
-        stap_factor = 2/3;
+        stap_factor = 1 / 3;
       } else {
-        stap_factor = 3/4;
+        stap_factor = 1 / 4;
       }
-      
-      huidige_hoek = Math.max(1, huidige_hoek * stap_factor);
-      
+
+      huidige_hoek = Math.max(1, huidige_hoek - stap_factor * huidige_hoek);
+
       console.log(`GEPROMOVEERD naar level ${huidig_level}, hoek: ${huidige_hoek.toFixed(2)}°`);
     }
   } else {
     // Fout antwoord - degraderen naar lager level
     attempts = 0; // Reset attempts na fout antwoord
-    
+
     if (huidig_level > 0) {
       huidig_level--;
-      
+
       // Bepaal stap factor op basis van het nieuwe level
       let stap_factor;
       if (huidig_level <= 3) {
-        stap_factor = 2/3;
+        stap_factor = 1 / 3;
       } else {
-        stap_factor = 3/4;
+        stap_factor = 1 / 4;
       }
-      
-      huidige_hoek = Math.min(90, huidige_hoek / stap_factor);
-      
+
+      huidige_hoek = Math.min(90, huidige_hoek + stap_factor * huidige_hoek);
+
       console.log(`GEDEGRADEERD naar level ${huidig_level}, hoek: ${huidige_hoek.toFixed(2)}°`);
     }
+
   }
   
   // In testfase (stage 1): tel aantal fragmenten
