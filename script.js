@@ -137,12 +137,11 @@ function updateAngleDisplay(angle) {
   console.log(`Arc from ${startAngleDeg}° to ${endAngleDeg}° (span = ${2 * angle}°)`);
 }
 
-
-
-
-
 // Functie om naar de volgende room condition te gaan
 function ga_naar_volgende_room() {
+  // Stop alle audio en timers
+  stop_alle_audio_en_timers();
+  
   huidige_room_index++;
   room_test_count = 0;
 
@@ -150,11 +149,6 @@ function ga_naar_volgende_room() {
     // Alle room conditions zijn doorlopen
     console.log('Alle room conditions voltooid!');
     test_actief = false;
-
-    if (huidige_audio) {
-      huidige_audio.pause();
-      huidige_audio = null;
-    }
 
     // Automatisch naar evaluatie scherm
     document.getElementById('test-interface').style.display = 'none';
@@ -241,13 +235,58 @@ function speel_fragment() {
   updateAngleDisplay(huidige_hoek);
 }
 
+// Functie om countdown te starten voor fragment
+function start_countdown() {
+  if (!test_actief) return;
+  
+  const countdownContainer = document.getElementById('countdown-container');
+  const countdownNumber = document.getElementById('countdown-number');
+  
+  if (!countdownContainer || !countdownNumber) return;
+  
+  // Verberg knoppen en toon countdown
+  toon_knoppen(false);
+  countdownContainer.style.display = 'block';
+  
+  let count = 3;
+  countdownNumber.textContent = count;
+  
+  const countdownInterval = setInterval(() => {
+    count--;
+    
+    if (count > 0) {
+      countdownNumber.textContent = count;
+      // Reset animation
+      countdownNumber.style.animation = 'none';
+      countdownNumber.offsetHeight; // Trigger reflow
+      countdownNumber.style.animation = 'countdown-pulse 1s ease-in-out';
+    } else {
+      // Countdown finished
+      clearInterval(countdownInterval);
+      countdownContainer.style.display = 'none';
+      
+      // Check if test is still active before playing
+      if (test_actief) {
+        speel_fragment();
+      }
+    }
+  }, 1000);
+}
+
 // Functie om de volgende test vraag voor te bereiden
 function bereid_volgende_vraag_voor() {
+  // Controleer of test nog actief is
+  if (!test_actief) {
+    console.log('Test is niet actief, stoppen met voorbereiden vraag');
+    return;
+  }
+  
   // Controleer of we genoeg tests hebben gedaan voor de huidige room
   if (room_test_count >= tests_per_room) {
     if (ga_naar_volgende_room()) {
       return; // Test is voltooid
     }
+    return; // Wacht op nieuwe room start
   }
   
   // Willekeurig fragment kiezen (1-4)
@@ -256,10 +295,12 @@ function bereid_volgende_vraag_voor() {
   // Willekeurige richting kiezen
   huidige_richting = Math.random() < 0.5 ? 'links' : 'rechts';
   
-  // Speel het fragment automatisch af
+  // Start countdown en speel fragment daarna
   setTimeout(() => {
-    speel_fragment();
-  }, 1000); // Vertraaging voor betere gebruikerservaring
+    if (test_actief) { // Extra check voordat countdown start
+      start_countdown();
+    }
+  }, 1000);
 }
 
 // Functie om antwoord te verwerken
@@ -303,7 +344,32 @@ function start_test() {
   test_actief = true;
   console.log(`Starting test with room condition: ${room_conditions[huidige_room_index]}`);
   bereid_volgende_vraag_voor();
+}
 
+// Functie om alle audio en timers te stoppen
+function stop_alle_audio_en_timers() {
+  test_actief = false;
+  
+  // Stop huidige audio
+  if (huidige_audio) {
+    huidige_audio.pause();
+    huidige_audio = null;
+  }
+  
+  // Stop kalibratie audio
+  if (kalibratie_audio) {
+    kalibratie_audio.pause();
+    kalibratie_audio = null;
+  }
+  
+  // Verberg countdown
+  const countdownContainer = document.getElementById('countdown-container');
+  if (countdownContainer) {
+    countdownContainer.style.display = 'none';
+  }
+  
+  // Toon knoppen (voor het geval ze verborgen waren)
+  toon_knoppen(true);
 }
 
 // DOM Content Loaded - Setup alle event listeners
