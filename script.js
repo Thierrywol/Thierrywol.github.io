@@ -3,7 +3,7 @@ const fragmenten_path = "processed_fragments";
 
 // CSV data storage
 let csv_data = {
-  participant_id: Date.now(), // Unique ID based on timestamp
+  participant_id: Date.now(), 
   questionnaire_data: {},
   test_data: []
 };
@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Event listeners voor gehoor opties - UPDATED to match age selection behavior
+   // Event listeners voor gehoor opties
   const radioOptions = document.querySelectorAll('.radio-option');
   radioOptions.forEach(option => {
     option.addEventListener('click', function() {
@@ -740,7 +740,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Verder knop eerste vragenlijst
-
   document.getElementById('verdervoor').addEventListener('click', function() {
     const ageSelected = document.querySelector('input[name="age"]:checked');
     const hearingSelected = document.querySelector('input[name="hearing"]:checked');
@@ -764,8 +763,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (room_conditions.length === 0) {
       room_conditions = generate_room_sequence();
     }
-    
-    // Rest of existing code...
+
     document.getElementById('voorafgaand').style.display = 'none';
     huidig_level = 0;
     huidige_hoek = 90;
@@ -829,9 +827,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Save evaluation data
-    save_questionnaire_data('evaluation', evaluations);
-    
-    // **CHANGE THIS LINE:**
+    save_questionnaire_data('evaluation', evaluations);    
     download_both_csvs(); // Instead of download_csv()
     
     console.log('Complete test data saved and downloaded');
