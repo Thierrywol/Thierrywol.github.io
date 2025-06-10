@@ -24,7 +24,7 @@ let attempts = 0; // Aantal pogingen in huidige fase
 let required_attempts = 1; // Start met 1 voor aanloopfase
 let previous_correct = null; // Houdt vorige antwoord juistheid bij voor omslag detectie
 let test_phase_count = 0; // Tel tests in fase 2 (na 3 omslagen)
-const TESTS_IN_PHASE_2 = 1; // 15 fragmenten in testfase
+const TESTS_IN_PHASE_2 = 15; // 15 fragmenten in testfase
 
 // Nieuwe variabelen voor room conditions
 let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
