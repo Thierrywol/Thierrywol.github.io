@@ -367,14 +367,16 @@ function toon_instruction_page_between_parts() {
   const instructionText = document.getElementById('instruction-text');
   
   let partNumber = '';
-  if (huidige_room_index === 1) {
+  if (huidige_room_index === 0) {
+    partNumber = 'eerste';
+  } else if (huidige_room_index === 1) {
     partNumber = 'tweede';
   } else if (huidige_room_index === 2) {
     partNumber = 'derde';
   }
   
   instructionTitle.textContent = 'Volgende deel van de test';
-  instructionText.textContent = `U heeft het eerste deel van de test afgerond. We gaan nu verder met het ${partNumber} onderdeel. Ook hier hoort u steeds een geluidsfragment via de hoofdtelefoon en geeft u aan van welke kant het geluid komt. Klik op "Doorgaan" om verder te gaan.`;
+  instructionText.textContent = `U heeft het ${partNumber-1} deel van de test afgerond. We gaan nu verder met het ${partNumber} onderdeel. Ook hier hoort u steeds een geluidsfragment via de hoofdtelefoon en geeft u aan van welke kant het geluid komt. Klik op "Doorgaan" om verder te gaan.`;
   
   document.getElementById('test-interface').style.display = 'none';
   document.getElementById('instruction-page').style.display = 'flex';
