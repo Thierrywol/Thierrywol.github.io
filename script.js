@@ -29,8 +29,6 @@ const TESTS_IN_PHASE_2 = 15; // 15 fragmenten in testfase
 // Nieuwe variabelen voor room conditions
 let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
 const room_conditions = ['small', 'medium', 'large'];
-let room_test_count = 0; // Teller voor aantal tests per room
-const tests_per_room = 3; // Aantal tests per room condition (aanpasbaar)
 
 // Nieuwe variabelen voor oefenronde
 let is_oefenronde = false;
@@ -305,14 +303,12 @@ function updateAngleDisplay(angle) {
 
   console.log(`Arc from ${startAngleDeg}° to ${endAngleDeg}° (span = ${2 * angle}°)`);
 }
-
 // Functie om naar de volgende room condition te gaan
 function ga_naar_volgende_room() {
   // Stop alle audio en timers
   stop_alle_audio_en_timers();
   
   huidige_room_index++;
-  room_test_count = 0;
 
   if (huidige_room_index >= room_conditions.length) {
     // Alle room conditions zijn doorlopen
@@ -503,21 +499,19 @@ function bereid_volgende_vraag_voor() {
       // Reset test variabelen voor echte test
       huidig_level = 0;
       huidige_hoek = 90;
-      
+      transitions = 0; // Reset transitions when starting real test
+      previous_correct = null; // Reset previous_correct when starting real test
+      stage = 0; // Reset to setup phase
+      attempts = 0;
+      required_attempts = 1;
+      test_phase_count = 0;
       toon_start_test_page();
       return;
     }
   } else {
+    // Only check for stage 1 completion (15 tests in phase 2)
     if (stage === 1 && test_phase_count >= TESTS_IN_PHASE_2) {
       console.log('Testfase voltooid na 15 fragmenten');
-      if (ga_naar_volgende_room()) {
-        return; // Test is voltooid
-      }
-      return; // Wacht op nieuwe room start
-    }
-    
-    // Controleer of we genoeg tests hebben gedaan voor de huidige room
-    if (room_test_count >= tests_per_room) {
       if (ga_naar_volgende_room()) {
         return; // Test is voltooid
       }
@@ -550,7 +544,7 @@ function verwerk_antwoord(gekozen_richting) {
   
   const correct = gekozen_richting === huidige_richting;
   
-  // **ADD THIS: Save test answer data**
+  // testdata opslaan
   const current_room = room_conditions[huidige_room_index];
   save_test_answer(
     correct, 
@@ -568,17 +562,19 @@ function verwerk_antwoord(gekozen_richting) {
     
     console.log(`Oefenronde: ${oefenronde_count}/${oefenronde_tests}`);
   } else {
-    // Verhoog test teller voor huidige room
-    room_test_count++;
     
     // Bereken volgende hoek (alleen voor echte test)
     bereken_volgende_hoek(correct);
     
-    // DEBUG: Toon voortgang
-    console.log(`Room: ${room_conditions[huidige_room_index]}, Test ${room_test_count}/${tests_per_room}`);
+    // Update DEBUG display to show current stage and progress
+    console.log(`Room: ${room_conditions[huidige_room_index]}, Stage: ${stage}, Test phase count: ${test_phase_count}/${TESTS_IN_PHASE_2}`);
     const progressDisplay = document.getElementById('progress-display');
     if (progressDisplay) {
-      progressDisplay.textContent = `${room_conditions[huidige_room_index]} (${room_test_count}/${tests_per_room})`;
+      if (stage === 0) {
+        progressDisplay.textContent = `${room_conditions[huidige_room_index]} - Aanloopfase (${transitions}/3 transities)`;
+      } else {
+        progressDisplay.textContent = `${room_conditions[huidige_room_index]} - Testfase (${test_phase_count}/${TESTS_IN_PHASE_2})`;
+      }
     }
   }
   
