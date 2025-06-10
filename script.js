@@ -1,6 +1,13 @@
 // Fragmenten pad en test variabelen
 const fragmenten_path = "processed_fragments";
 
+// CSV data storage
+let csv_data = {
+  participant_id: Date.now(), // Unique ID based on timestamp
+  questionnaire_data: {},
+  test_data: []
+};
+
 // Test variabelen
 let kalibratie_audio = null;
 let huidig_level = 0; // Start level
@@ -23,12 +30,113 @@ const TESTS_IN_PHASE_2 = 15; // 15 fragmenten in testfase
 let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
 const room_conditions = ['small', 'medium', 'large'];
 let room_test_count = 0; // Teller voor aantal tests per room
-const tests_per_room = 40; // Aantal tests per room condition (aanpasbaar)
+const tests_per_room = 3; // Aantal tests per room condition (aanpasbaar)
 
 // Nieuwe variabelen voor oefenronde
 let is_oefenronde = false;
 let oefenronde_count = 0;
 const oefenronde_tests = 3; // Aantal oefenvragen
+
+// CSV utility functions//
+
+function generate_questionnaire_csv() {
+  let csv_content = 'participant_id,';
+  
+  // Collect all questionnaire columns
+  let columns = [];
+  let values = [`${csv_data.participant_id}`];
+  
+  Object.keys(csv_data.questionnaire_data).forEach(questionnaire_name => {
+    const data = csv_data.questionnaire_data[questionnaire_name];
+    Object.keys(data).forEach(question_key => {
+      columns.push(`${questionnaire_name}_${question_key}`);
+      values.push(`"${data[question_key]}"`);
+    });
+  });
+  
+  csv_content += columns.join(',') + '\n';
+  csv_content += values.join(',') + '\n';
+  
+  return csv_content;
+}
+
+function generate_test_data_csv() {
+  let csv_content = 'participant_id,timestamp,is_practice,room_condition,fragment_number,direction_played,angle,correct,level,transitions,stage,test_phase_count\n';
+  
+  csv_data.test_data.forEach(test => {
+    csv_content += `${csv_data.participant_id},${test.timestamp},${test.is_practice},${test.room_condition},${test.fragment_number},"${test.direction_played}",${test.angle},${test.correct},${test.level},${test.transitions},${test.stage},${test.test_phase_count || ''}\n`;
+  });
+  
+  return csv_content;
+}
+
+function download_both_csvs() {
+  // Download questionnaire CSV
+  const questionnaire_csv = generate_questionnaire_csv();
+  const questionnaire_blob = new Blob([questionnaire_csv], { type: 'text/csv;charset=utf-8;' });
+  const questionnaire_link = document.createElement('a');
+  
+  if (questionnaire_link.download !== undefined) {
+    const url = URL.createObjectURL(questionnaire_blob);
+    questionnaire_link.setAttribute('href', url);
+    questionnaire_link.setAttribute('download', `questionnaire_${csv_data.participant_id}.csv`);
+    questionnaire_link.style.visibility = 'hidden';
+    document.body.appendChild(questionnaire_link);
+    questionnaire_link.click();
+    document.body.removeChild(questionnaire_link);
+  }
+  
+  // Download test data CSV
+  setTimeout(() => {
+    const test_csv = generate_test_data_csv();
+    const test_blob = new Blob([test_csv], { type: 'text/csv;charset=utf-8;' });
+    const test_link = document.createElement('a');
+    
+    if (test_link.download !== undefined) {
+      const url = URL.createObjectURL(test_blob);
+      test_link.setAttribute('href', url);
+      test_link.setAttribute('download', `test_data_${csv_data.participant_id}.csv`);
+      test_link.style.visibility = 'hidden';
+      document.body.appendChild(test_link);
+      test_link.click();
+      document.body.removeChild(test_link);
+    }
+  }, 500); // Small delay between downloads
+}
+
+// Function to save questionnaire data
+function save_questionnaire_data(questionnaire_name, data) {
+  if (!csv_data.questionnaire_data[questionnaire_name]) {
+    csv_data.questionnaire_data[questionnaire_name] = {};
+  }
+  
+  Object.keys(data).forEach(key => {
+    csv_data.questionnaire_data[questionnaire_name][key] = data[key];
+  });
+  
+  console.log(`Saved ${questionnaire_name} data:`, data);
+}
+
+// Function to save test answer data
+function save_test_answer(correct, angle, room_condition, is_practice, fragment_number, direction_played) {
+  const test_entry = {
+    timestamp: new Date().toISOString(),
+    is_practice: is_practice,
+    room_condition: room_condition,
+    fragment_number: fragment_number,
+    direction_played: direction_played,
+    angle: angle.toFixed(2),
+    correct: correct,
+    level: huidig_level,
+    transitions: transitions,
+    stage: stage,
+    test_phase_count: stage === 1 ? test_phase_count : null
+  };
+  
+  csv_data.test_data.push(test_entry);
+  
+  console.log('Saved test answer:', test_entry);
+}
 
 // Functie om kalibratie fragment af te spelen
 function speel_kalibratie() {
@@ -442,6 +550,17 @@ function verwerk_antwoord(gekozen_richting) {
   
   const correct = gekozen_richting === huidige_richting;
   
+  // **ADD THIS: Save test answer data**
+  const current_room = room_conditions[huidige_room_index];
+  save_test_answer(
+    correct, 
+    huidige_hoek, 
+    current_room, 
+    is_oefenronde, 
+    is_oefenronde ? 5 : huidig_fragment, 
+    huidige_richting
+  );
+  
   if (is_oefenronde) {
     // Verhoog oefenronde teller
     oefenronde_count++;
@@ -607,10 +726,13 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
-    // Verberg voorafgaand formulier
-    document.getElementById('voorafgaand').style.display = 'none';
+    save_questionnaire_data('demographics', {
+      age: ageSelected.value,
+      hearing_problems: hearingSelected.value
+    });
     
-    // Reset alle test variabelen
+    // Rest of function remains the same...
+    document.getElementById('voorafgaand').style.display = 'none';
     huidig_level = 0;
     huidige_hoek = 90;
     huidige_room_index = 0;
@@ -618,7 +740,6 @@ document.addEventListener('DOMContentLoaded', function() {
     is_oefenronde = false;
     oefenronde_count = 0;
     
-    // Toon instruction page voor eerste keer
     toon_instruction_page(true);
   });
 
@@ -659,36 +780,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Verder knop na test (verzenden)
   document.getElementById('verderachteraf').addEventListener('click', function() {
-    const formData = {
-      age: document.querySelector('input[name="age"]:checked')?.value,
-      hearing: document.querySelector('input[name="hearing"]:checked')?.value,
-      test_resultaten: {
-        eind_level: huidig_level,
-        eind_hoek: huidige_hoek,
-        voltooide_rooms: huidige_room_index,
-        laatste_room: room_conditions[Math.min(huidige_room_index, room_conditions.length - 1)]
-      },
-      evaluations: {}
-    };
-    
+    // Collect evaluation data
+    const evaluations = {};
     for (let i = 1; i <= 9; i++) {
       const slider = document.getElementById(`vraag${i}`);
       if (slider) {
-        formData.evaluations[`vraag${i}`] = slider.value;
+        evaluations[`question_${i}`] = slider.value;
       }
     }
     
     const feedback = document.getElementById('feedback');
-    if (feedback) {
-      formData.feedback = feedback.value;
+    if (feedback && feedback.value.trim()) {
+      evaluations.feedback = feedback.value.trim();
     }
     
-    console.log('Test Data:', formData);
+    // Save evaluation data
+    save_questionnaire_data('evaluation', evaluations);
     
-    alert('Test verzonden! Bedankt voor uw deelname.');
+    // **CHANGE THIS LINE:**
+    download_both_csvs(); // Instead of download_csv()
     
-    // Optioneel: Reset naar begin
-    // location.reload();
+    console.log('Complete test data saved and downloaded');
+    alert('Test verzonden en data gedownload! Bedankt voor uw deelname.');
   });
 
   // Toetsenbord navigatie (alleen voor vragenlijsten)
