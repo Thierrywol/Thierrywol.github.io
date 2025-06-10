@@ -24,7 +24,7 @@ let attempts = 0; // Aantal pogingen in huidige fase
 let required_attempts = 1; // Start met 1 voor aanloopfase
 let previous_correct = null; // Houdt vorige antwoord juistheid bij voor omslag detectie
 let test_phase_count = 0; // Tel tests in fase 2 (na 3 omslagen)
-const TESTS_IN_PHASE_2 = 15; // 15 fragmenten in testfase
+const TESTS_IN_PHASE_2 = 1; // 15 fragmenten in testfase
 
 // Nieuwe variabelen voor room conditions
 let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
@@ -380,17 +380,22 @@ function toon_instruction_page_between_parts() {
   const instructionTitle = document.getElementById('instruction-title');
   const instructionText = document.getElementById('instruction-text');
   
-  let partNumber = '';
-  if (huidige_room_index === 0) {
-    partNumber = 'eerste';
-  } else if (huidige_room_index === 1) {
-    partNumber = 'tweede';
+  let completedPart = '';
+  let nextPart = '';
+  
+  if (huidige_room_index === 1) {
+    completedPart = 'eerste';
+    nextPart = 'tweede';
   } else if (huidige_room_index === 2) {
-    partNumber = 'derde';
+    completedPart = 'tweede';
+    nextPart = 'derde';
+  } else if (huidige_room_index === 3) {
+    completedPart = 'derde';
+    nextPart = 'vierde';
   }
   
   instructionTitle.textContent = 'Volgende deel van de test';
-  instructionText.textContent = `U heeft het ${partNumber-1} deel van de test afgerond. We gaan nu verder met het ${partNumber} onderdeel. Ook hier hoort u steeds een geluidsfragment via de hoofdtelefoon en geeft u aan van welke kant het geluid komt. Klik op "Doorgaan" om verder te gaan.`;
+  instructionText.textContent = `U heeft het ${completedPart} deel van de test afgerond. We gaan nu verder met het ${nextPart} onderdeel. Ook hier hoort u steeds een geluidsfragment via de hoofdtelefoon en geeft u aan van welke kant het geluid komt. Klik op "Doorgaan" om verder te gaan.`;
   
   document.getElementById('test-interface').style.display = 'none';
   document.getElementById('instruction-page').style.display = 'flex';
