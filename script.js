@@ -28,15 +28,28 @@ const TESTS_IN_PHASE_2 = 15; // 15 fragmenten in testfase
 
 // Nieuwe variabelen voor room conditions
 let huidige_room_index = 0; // 0 = small, 1 = medium, 2 = large
-const room_conditions = ['small', 'medium', 'large'];
+const base_room_conditions = ['small', 'medium', 'large'];
+let room_conditions = [];
+let room_test_count = 0;
 
 // Nieuwe variabelen voor oefenronde
 let is_oefenronde = false;
 let oefenronde_count = 0;
 const oefenronde_tests = 3; // Aantal oefenvragen
 
-// CSV utility functions//
+// Generate room sequence: first three in order, fourth is random repeat
+function generate_room_sequence() {
+  const sequence = ['small', 'medium', 'large']; // First three rooms in fixed order
+  
+  // Fourth room is randomly selected from all three options (a repeat)
+  const random_fourth = base_room_conditions[Math.floor(Math.random() * base_room_conditions.length)];
+  sequence.push(random_fourth);
+  
+  console.log('Generated room sequence:', sequence);
+  return sequence;
+}
 
+// CSV utility functions//
 function generate_questionnaire_csv() {
   let csv_content = 'participant_id,';
   
@@ -303,6 +316,7 @@ function updateAngleDisplay(angle) {
 
   console.log(`Arc from ${startAngleDeg}° to ${endAngleDeg}° (span = ${2 * angle}°)`);
 }
+
 // Functie om naar de volgende room condition te gaan
 function ga_naar_volgende_room() {
   // Stop alle audio en timers
@@ -325,7 +339,7 @@ function ga_naar_volgende_room() {
     // Reset alle variabelen voor nieuwe room
   huidig_level = 0;
   huidige_hoek = 90;
-  stage = 0; // Reset naar aanloopfase
+  stage = 0;
   attempts = 0;
   required_attempts = 1;
   transitions = 0;
@@ -586,6 +600,17 @@ function verwerk_antwoord(gekozen_richting) {
   }, 800);
 }
 
+function initialize_new_participant() {
+  room_conditions = generate_room_sequence();
+  huidige_room_index = 0;
+  // Reset other participant-specific variables as needed
+  csv_data = {
+    participant_id: Date.now(),
+    questionnaire_data: {},
+    test_data: []
+  };
+}
+
 // Functie om oefenronde te starten
 function start_oefenronde() {
   // Verberg oefenronde page
@@ -710,6 +735,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Verder knop eerste vragenlijst
+
   document.getElementById('verdervoor').addEventListener('click', function() {
     const ageSelected = document.querySelector('input[name="age"]:checked');
     const hearingSelected = document.querySelector('input[name="hearing"]:checked');
@@ -729,17 +755,22 @@ document.addEventListener('DOMContentLoaded', function() {
       hearing_problems: hearingSelected.value
     });
     
-    // Rest of function remains the same...
+    // Generate room sequence ONLY ONCE when participant starts
+    if (room_conditions.length === 0) {
+      room_conditions = generate_room_sequence();
+    }
+    
+    // Rest of existing code...
     document.getElementById('voorafgaand').style.display = 'none';
     huidig_level = 0;
     huidige_hoek = 90;
     huidige_room_index = 0;
-    room_test_count = 0;
     is_oefenronde = false;
     oefenronde_count = 0;
     
     toon_instruction_page(true);
   });
+
 
   // Start test knop op instruction page (alleen voor eerste keer)
   document.getElementById('start-test').addEventListener('click', function() {
