@@ -808,8 +808,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Knop om testresultaten te verzenden
   document.getElementById('verderachteraf').addEventListener('click', function() {
-    const evaluations = {};
-    for (let i = 1; i <= 9; i++) {
+   const evaluations = {};
+
+   // for (let i = 1; i <= 9; i++) { : hiermee was de originele code gerund, waardoom de laatste vragen niet naar de csv geexporteerd waren. nu aangepast naar 12
+        for (let i = 1; i <= 12; i++) {
       const slider = document.getElementById(`vraag${i}`);
       if (slider) {
         evaluations[`question_${i}`] = slider.value;
@@ -824,7 +826,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Sla evaluatie op en download CSV
     save_questionnaire_data('evaluation', evaluations);    
-    download_both_csvs(); // Instead of download_csv()
+    download_both_csvs();
     
     console.log('Complete test data saved and downloaded');
     alert('Test verzonden en data gedownload! Bedankt voor uw deelname.');
