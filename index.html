@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Muziekperceptietest</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
   <div class="background">
     <img src="online-banking-2.png" alt="Overlay Image" class="overlay-image">
   </div>
 
+<!--Dit gedeelte is voor de volume kalibratie van de test, hiermee kan met de db-meter bepaald worden of de test niet over de 75 dB
+    en de participant kan vervolgens ook de kalibratie toon beluisteren en zeggen of het geluid te hard staat, dan kan het eventueel nog zachter-->
   <div class="container">
     <div id="kalibratie" style="display: flex;">
       <div class="kalibratie-content">
@@ -23,6 +25,7 @@
       </div>
     </div>
 
+<!--Dit onderdeel is verantwoordelijk voor de pagina waar de voorafgaande vragen worden gesteld aan de participant, hier wordt om de leeftijdsklasse en mate van gehoorverlies gevraagd-->
     <div id="voorafgaand" style="display: none;">
       <p>Voor we starten met de test stellen we u enkele korte vragen over uw leeftijd en gehoor. Deze informatie helpt ons om de resultaten van de muziekperceptietest beter te begrijpen.</p>
       
@@ -68,6 +71,7 @@
         </div>
       </div>
 
+<!-- hier boven is dus het gedeelte voor de leeftijdsklassen en hieronder voor mate van gehoorverlies-->
       <div class="hearing-selection">
         <label class="hearing-label">Ervaart u zelf gehoorvermindering?</label>
         <div class="hearing-options">
@@ -86,6 +90,8 @@
       <button id="verdervoor" class="button">Verdergaan</button>
     </div>
 
+<!--Dit stuk code is voor de pagina waar de test instructies opstaan, hier wordt nog eens kort uitgelegd hoe lang de test duurt en hoeveel
+    onderdelen de test bevat, ook wordt uitgelegd hoe de test werkt-->
     <div id="instruction-page" style="display: none;">
       <div class="instruction-content">
         <h2 id="instruction-title">Instructies voor de test</h2>
@@ -94,6 +100,7 @@
       </div>
     </div>
 
+<!-- In de code hieronder wordt de oefenronde uitgelegd-->
     <div id="oefenronde-page" style="display: none;">
       <div class="instruction-content">
         <h2>Oefenronde</h2>
@@ -102,6 +109,7 @@
       </div>
     </div>
 
+<!-- hieronder wordt het einde van de oefenronde aangekondigd en de daadwerkelijke test aangekondigd, ook is er nogmaals een kleinde uitleg-->
     <div id="start-test-page" style="display: none;">
       <div class="instruction-content">
         <h2>Start van de test</h2>
@@ -110,6 +118,7 @@
       </div>
     </div>
 
+<!-- Dit gedeelte is verantwoordelijk voor de test-interface, zo is de countdown, de links en rechts knop en de waaier hier gecodeerd-->
     <div id="test-interface" style="display: none;">
       <h2>Komt het geluid van links of van rechts?</h2>
       <div id="countdown-container" class="countdown-container" style="display: none;">
@@ -120,22 +129,18 @@
         <path id="filledSection" d="" fill="#D89E38" stroke="#B8801F" stroke-width="1.5"/>
         <line x1="180" y1="105" x2="180" y2="180" stroke="#999" stroke-width="1.5" stroke-dasharray="3,3"/>
       </svg>
-      
+
+<!-- links rechts knop--> 
       <div class="button-row">
         <button class="button" id="links-knop">Van links</button>
         <button class="button" id="rechts-knop">Van rechts</button>
       </div>
-
-      <!-- DEBUG --
-      <div id="debug-info" style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
-        <p>Level: <span id="level-display">0</span></p>
-        <p>Hoek: <span id="hoek-display">90°</span></p>
-        <p>Progress: <span id="progress-display">small (0/3)</span></p>
-      </div>
-      -- EINDE DEBUG -->
-      
     </div>
 
+<!-- als de test klaar is krijgt de deelnemer het stuk dat hieronder gecodeerd is te zien, hier wordt vertelt dat de test klaar is 
+     en wordt nog gevraagd aan de deelnemer om een korte vragenlijst in te vullen over de ervaring van de test. Per vraag is een slider 
+     knop toegevoegd waardoor de deelnemer het bolletje op 1 t/m 7 kan zetten. voor elke vraag wordt dit opnieuw gecodeerd dus hier onder
+     zijn dus ook 12 delen van de code te zien.-->
     <div id="achteraf" style="display: none;">
       <p>Bedankt voor uw deelname, u heeft de test succesvol afgerond! We vragen u nu om een korte vragenlijst in te vullen over uw ervaring met de test. Uw feedback helpt ons om de test verder te verbeteren en beter af te stemmen op deelnemers.</p>
       <div class="slider-question">
@@ -330,6 +335,8 @@
         </div>
       </div>
 
+<!--Dit is de laatste vraag van het de vragen lijst en betreft een open vraag waar mensen feedback in kunnen schrijven, 
+    dat is hier onder gecodeerd -->
       <div class="slider-question">
         <label for="feedback">13. Heeft u nog feedback over de test die u graag wilt delen?</label>
         <div class="feedback-container">
@@ -337,10 +344,11 @@
         </div>
       </div>
 
+<!--Deze knop "verzenden" staat onderaan de vragen lijst, als men hier op drukt zullen de antwoorden op de vragenlijst en 
+    de richtinghoren test gedownload worden lokaal op de laptop-->
       <button id="verderachteraf" class="button">Verzenden</button>
     </div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>

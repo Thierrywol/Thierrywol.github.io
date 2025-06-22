@@ -37,23 +37,18 @@ let is_oefenronde = false;
 let oefenronde_count = 0;
 const oefenronde_tests = 3; // Aantal oefenvragen
 
-// Generate room sequence: first three in order, fourth is random repeat
+// Genereert volgorde van kamers: eerste drie vast, vierde is willekeurige herhaling
 function generate_room_sequence() {
-  const sequence = ['small', 'medium', 'large']; // First three rooms in fixed order
-  
-  // Fourth room is randomly selected from all three options (a repeat)
+  const sequence = ['small', 'medium', 'large']; // eerste drie kamers
   const random_fourth = base_room_conditions[Math.floor(Math.random() * base_room_conditions.length)];
   sequence.push(random_fourth);
-  
   console.log('Generated room sequence:', sequence);
   return sequence;
 }
 
-// CSV utility functions//
+// Maakt CSV bestand aan voor vragenlijstgegevens
 function generate_questionnaire_csv() {
   let csv_content = 'participant_id,';
-  
-  // Collect all questionnaire columns
   let columns = [];
   let values = [`${csv_data.participant_id}`];
   
@@ -71,6 +66,7 @@ function generate_questionnaire_csv() {
   return csv_content;
 }
 
+// Maakt CSV bestand aan voor testdata
 function generate_test_data_csv() {
   let csv_content = 'participant_id,timestamp,is_practice,room_condition,fragment_number,direction_played,angle,correct,level,transitions,stage,test_phase_count\n';
   
@@ -81,6 +77,7 @@ function generate_test_data_csv() {
   return csv_content;
 }
 
+// Start download van beide CSV bestanden 
 function download_both_csvs() {
   // Download questionnaire CSV
   const questionnaire_csv = generate_questionnaire_csv();
@@ -112,10 +109,10 @@ function download_both_csvs() {
       test_link.click();
       document.body.removeChild(test_link);
     }
-  }, 500); // Small delay between downloads
+  }, 500); 
 }
 
-// Function to save questionnaire data
+// Slaat ingevulde vragenlijstgegevens op
 function save_questionnaire_data(questionnaire_name, data) {
   if (!csv_data.questionnaire_data[questionnaire_name]) {
     csv_data.questionnaire_data[questionnaire_name] = {};
@@ -128,7 +125,7 @@ function save_questionnaire_data(questionnaire_name, data) {
   console.log(`Saved ${questionnaire_name} data:`, data);
 }
 
-// Function to save test answer data
+// Slaat antwoord van test op in CSV data
 function save_test_answer(correct, angle, room_condition, is_practice, fragment_number, direction_played) {
   const test_entry = {
     timestamp: new Date().toISOString(),
@@ -273,7 +270,6 @@ function bereken_volgende_hoek(correct) {
   
   console.log(`Level: ${huidig_level}, Hoek: ${huidige_hoek.toFixed(2)}°, Fase: ${stage}, Transities: ${transitions}`);
   
-  // DEBUG: Update display elementen
   const levelDisplay = document.getElementById('level-display');
   const hoekDisplay = document.getElementById('hoek-display');
   if (levelDisplay) levelDisplay.textContent = huidig_level;
@@ -282,6 +278,7 @@ function bereken_volgende_hoek(correct) {
   updateAngleDisplay(huidige_hoek);
 }
 
+// Teken hoekenboog op scherm
 function updateAngleDisplay(angle) {
   const filledSection = document.getElementById('filledSection');
   if (!filledSection) return;
@@ -290,11 +287,10 @@ function updateAngleDisplay(angle) {
   const centerY = 180;
   const radius = 75;
 
-  // Arc from -angle to +angle
   const startAngleDeg = -angle;
   const endAngleDeg = angle;
 
-  // Convert to radians and rotate –90° so 0° points up
+  // Omrekenen naar radians 
   const startRad = (startAngleDeg - 90) * Math.PI / 180;
   const endRad = (endAngleDeg - 90) * Math.PI / 180;
 
@@ -348,12 +344,10 @@ function ga_naar_volgende_room() {
 
   console.log(`Overschakelen naar room condition: ${room_conditions[huidige_room_index]} (Alle variabelen gereset)`);
 
-  // DEBUG UI update
   const levelDisplay = document.getElementById('level-display');
   const hoekDisplay = document.getElementById('hoek-display');
   if (levelDisplay) levelDisplay.textContent = huidig_level;
   if (hoekDisplay) hoekDisplay.textContent = `${huidige_hoek.toFixed(1)}°`;
-  // einde debug
 
   // Toon instruction page voor volgende room condition
   toon_instruction_page_between_parts();
@@ -484,16 +478,15 @@ function start_countdown() {
     
     if (count > 0) {
       countdownNumber.textContent = count;
-      // Reset animation
+      // animatie resetten
       countdownNumber.style.animation = 'none';
-      countdownNumber.offsetHeight; // Trigger reflow
+      countdownNumber.offsetHeight; 
       countdownNumber.style.animation = 'countdown-pulse 1s ease-in-out';
     } else {
-      // Countdown finished
+      // Countdown afgelopen
       clearInterval(countdownInterval);
       countdownContainer.style.display = 'none';
       
-      // Check if test is still active before playing
       if (test_actief) {
         speel_fragment();
       }
@@ -518,19 +511,19 @@ function bereid_volgende_vraag_voor() {
       test_actief = false;
       
       // Reset test variabelen voor echte test
-      huidig_level = 0;
-      huidige_hoek = 90;
+      huidig_level = 0; // Aantal transities resetten
+      huidige_hoek = 90; // Laatste antwoord resetten
       transitions = 0; // Reset transitions when starting real test
       previous_correct = null; // Reset previous_correct when starting real test
       stage = 0; // Reset to setup phase
       attempts = 0;
       required_attempts = 1;
       test_phase_count = 0;
-      toon_start_test_page();
+      toon_start_test_page(); // Toon startpagina voor test
       return;
     }
   } else {
-    // Only check for stage 1 completion (15 tests in phase 2)
+    // Controleer of fase 2 voltooid is (15 tests)
     if (stage === 1 && test_phase_count >= TESTS_IN_PHASE_2) {
       console.log('Testfase voltooid na 15 fragmenten');
       if (ga_naar_volgende_room()) {
@@ -556,7 +549,7 @@ function bereid_volgende_vraag_voor() {
   }, 1000);
 }
 
-// Functie om antwoord te verwerken
+// Verwerk het antwoord van de deelnemer
 function verwerk_antwoord(gekozen_richting) {
   if (!test_actief) return;
   
@@ -577,7 +570,7 @@ function verwerk_antwoord(gekozen_richting) {
   );
   
   if (is_oefenronde) {
-    // Verhoog oefenronde teller
+    // Verhoog oefenronde teller en bepaa; volgende hoek
     oefenronde_count++;
     bereken_volgende_hoek(correct);
     
@@ -587,7 +580,7 @@ function verwerk_antwoord(gekozen_richting) {
     // Bereken volgende hoek (alleen voor echte test)
     bereken_volgende_hoek(correct);
     
-    // Update DEBUG display to show current stage and progress
+      // Toon voortgang op debug display
     console.log(`Room: ${room_conditions[huidige_room_index]}, Stage: ${stage}, Test phase count: ${test_phase_count}/${TESTS_IN_PHASE_2}`);
     const progressDisplay = document.getElementById('progress-display');
     if (progressDisplay) {
@@ -605,10 +598,11 @@ function verwerk_antwoord(gekozen_richting) {
   }, 800);
 }
 
+// Startwaarden voor een nieuwe deelnemer
 function initialize_new_participant() {
   room_conditions = generate_room_sequence();
   huidige_room_index = 0;
-  // Reset other participant-specific variables as needed
+  // Reset variabelen specifiek voor deze deelnemer
   csv_data = {
     participant_id: Date.now(),
     questionnaire_data: {},
@@ -625,16 +619,16 @@ function start_oefenronde() {
   document.getElementById('test-interface').style.display = 'flex';
   document.body.style.overflow = 'hidden';
   
-  // Initialize practice round variables
+  // Initialiseer oefenvariabelen
   is_oefenronde = true;
   oefenronde_count = 0;
   test_actief = true;
   
-  // Initialize level and angle for practice (same as main test)
+  // Zet startwaarden voor level en hoek
   huidig_level = 0;
   huidige_hoek = 90;
   
-  // Update debug display if it exists
+  // Update debug display
   const levelDisplay = document.getElementById('level-display');
   const hoekDisplay = document.getElementById('hoek-display');
   if (levelDisplay) levelDisplay.textContent = huidig_level;
@@ -644,15 +638,16 @@ function start_oefenronde() {
   bereid_volgende_vraag_voor();
 }
 
-// Functie om test te starten vanuit instruction page (voor vervolgdelen)
+// Start de echte test vanuit instructiepagina
 function start_test() {
-  // Verberg instruction page
+  // Verberg instructiepagina
   document.getElementById('instruction-page').style.display = 'none';
   
   // Toon test interface
   document.getElementById('test-interface').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 
+  // Verberg startpagina test
   document.getElementById('start-test-page').style.display = 'none';
   
   // Start de test
@@ -661,7 +656,7 @@ function start_test() {
   bereid_volgende_vraag_voor();
 }
 
-// Functie om alle audio en timers te stoppen
+// Stop alle audio en timers
 function stop_alle_audio_en_timers() {
   test_actief = false;
   
@@ -687,10 +682,10 @@ function stop_alle_audio_en_timers() {
   toon_knoppen(true);
 }
 
-// DOM Content Loaded - Setup alle event listeners
+// Event handlers na DOM is geladen
 document.addEventListener('DOMContentLoaded', function() {
   
-  // Event listeners voor leeftijdsopties
+// Selecteer leeftijdsopties
   const ageOptions = document.querySelectorAll('.age-option');
   ageOptions.forEach(option => {
     option.addEventListener('click', function() {
@@ -705,37 +700,37 @@ document.addEventListener('DOMContentLoaded', function() {
   const radioOptions = document.querySelectorAll('.radio-option');
   radioOptions.forEach(option => {
     option.addEventListener('click', function() {
-      // Remove selected class from all options
+      // Deselecteer alle opties
       radioOptions.forEach(opt => opt.classList.remove('selected'));
       
-      // Add selected class to clicked option
+      // Selecteer aangeklikte optie
       this.classList.add('selected');
       
-      // Check the radio button
+      // Selecteer bijbehorende radio button
       const radio = this.querySelector('input[type="radio"]');
       radio.checked = true;
     });
   });
-   // Event listeners voor kalibratie
+   // Event listeners voor kalibratieknoppen
   document.getElementById('speel-kalibratie').addEventListener('click', function() {
-    speel_kalibratie();
+    speel_kalibratie(); // Start kalibratieaudio
   });
 
   document.getElementById('stop-kalibratie').addEventListener('click', function() {
-    stop_kalibratie();
+    stop_kalibratie(); // Stop kalibratie audio
   });
 
   document.getElementById('verder-kalibratie').addEventListener('click', function() {
-    // Stop kalibratie audio als het nog speelt
+    // Stop audio als nog actief
     if (kalibratie_audio) {
       kalibratie_audio.pause();
       kalibratie_audio = null;
     }
     
-    // Verberg kalibratie pagina
+    // Verberg kalibratiepagina en toon vragenlijst
     document.getElementById('kalibratie').style.display = 'none';
     
-    // Toon vragenlijst
+    // Knop om vragenlijst te bevestigen
     document.getElementById('voorafgaand').style.display = 'flex';
   });
 
@@ -744,6 +739,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const ageSelected = document.querySelector('input[name="age"]:checked');
     const hearingSelected = document.querySelector('input[name="hearing"]:checked');
     
+    // Check of leeftijd en gehoor zijn ingevuld
     if (!ageSelected) {
       alert('Selecteer alstublieft uw leeftijd.');
       return;
@@ -754,16 +750,18 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
+    // Sla antwoorden op
     save_questionnaire_data('demographics', {
       age: ageSelected.value,
       hearing_problems: hearingSelected.value
     });
     
-    // Generate room sequence ONLY ONCE when participant starts
+    // Genereer volgorde van kamers voor één keer
     if (room_conditions.length === 0) {
       room_conditions = generate_room_sequence();
     }
-
+    
+    // Reset testvariabelen
     document.getElementById('voorafgaand').style.display = 'none';
     huidig_level = 0;
     huidige_hoek = 90;
@@ -771,18 +769,16 @@ document.addEventListener('DOMContentLoaded', function() {
     is_oefenronde = false;
     oefenronde_count = 0;
     
-    toon_instruction_page(true);
+    toon_instruction_page(true); // Ga naar instructiepagina
   });
 
 
-  // Start test knop op instruction page (alleen voor eerste keer)
+  // Start test knop (vanaf instructiepagina)
   document.getElementById('start-test').addEventListener('click', function() {
-    // Check if this is the first time or continuation
+    // Eerste keer: toon oefenronde, anders start echte test
     if (huidige_room_index === 0 && room_test_count === 0) {
-      // Eerste keer: ga naar oefenronde
       toon_oefenronde_page();
     } else {
-      // Vervolgdelen: start direct test
       start_test();
     }
   });
@@ -797,7 +793,7 @@ document.addEventListener('DOMContentLoaded', function() {
     start_test();
   });
 
-  // Event listeners voor test knoppen (links/rechts)
+  // test knoppen (links/rechts)
   const testButtons = document.querySelectorAll('#test-interface .button-row .button');
   
   if (testButtons.length >= 2) {
@@ -810,9 +806,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Verder knop na test (verzenden)
+  // Knop om testresultaten te verzenden
   document.getElementById('verderachteraf').addEventListener('click', function() {
-    // Collect evaluation data
     const evaluations = {};
     for (let i = 1; i <= 9; i++) {
       const slider = document.getElementById(`vraag${i}`);
@@ -821,12 +816,13 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
+    // Voeg optionele feedback toe
     const feedback = document.getElementById('feedback');
     if (feedback && feedback.value.trim()) {
       evaluations.feedback = feedback.value.trim();
     }
-    
-    // Save evaluation data
+
+    // Sla evaluatie op en download CSV
     save_questionnaire_data('evaluation', evaluations);    
     download_both_csvs(); // Instead of download_csv()
     
@@ -849,7 +845,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Focus styling voor toegankelijkheid
+  // Visuele focusstyling voor betere toegankelijkheid
   document.querySelectorAll('.age-option, .radio-option').forEach(element => {
     element.setAttribute('tabindex', '0');
     
