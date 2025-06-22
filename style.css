@@ -26,6 +26,7 @@ body {
   object-fit: cover;
 }
 
+/* Container voor de inhoud op de pagina */
 .container {
   position: relative;
   z-index: 1;
@@ -33,6 +34,7 @@ body {
   min-height: 100vh;
 }
 
+/* Rij met knoppen */
 .button-row {
   display: flex;
   justify-content: center;
@@ -41,6 +43,7 @@ body {
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
+/* Style voor knoppen */
 .button {
   background-color: #f0a500;
   border: none;
@@ -54,6 +57,7 @@ body {
   font-weight: 600;
 }
 
+/* feedback van knop */
 .button:hover {
   background-color: #e09400;
   transform: translateY(-2px);
@@ -69,6 +73,8 @@ body {
   padding: 3rem;
 }
 
+
+/* Gebied met instructies en visuele effecten */
 .kalibratie-content {
   text-align: center;
   max-width: 700px;
@@ -80,6 +86,7 @@ body {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+/* Titel van kalibratiepagina */
 .kalibratie-content h2 {
   font-size: 2.2rem;
   margin-bottom: 1.5rem;
@@ -95,6 +102,7 @@ body {
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
+/* Knoppen voor audio afspelen of pauzeren */
 .audio-controls {
   margin: 2rem 0;
   display: flex;
@@ -102,6 +110,7 @@ body {
   justify-content: center;
 }
 
+/* Tussenkopje voor uitleg */
 .kalibratie-instructie {
   font-size: 1.1rem;
   font-weight: 600;
@@ -124,13 +133,15 @@ body {
   color: rgba(255, 255, 255, 0.9);
 }
 
+/* Knop om verder te gaan */
 #verder-kalibratie {
   margin-top: 2rem;
   font-size: 1.3rem;
   padding: 1.2rem 2.5rem;
 }
 
-/* Updated voorafgaand page styles - fixing sizing issues */
+
+/* Updated voorafgaand page styles */
 #voorafgaand {
   padding: 2rem;
   text-align: center;
@@ -153,12 +164,13 @@ body {
   margin-bottom: 1rem;
 }
 
-/* Age selection - improved responsive grid */
+/* Leeftijdsselectie  */
 .age-selection {
   width: 100%;
   max-width: 900px;
 }
 
+/* Label voor leeftijdsselectie */
 .age-selection > label {
   display: block;
   margin-bottom: 1.5rem;
@@ -168,6 +180,7 @@ body {
   color: white;
 }
 
+/* Layout voor leeftijdskeuzes */
 .age-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -176,6 +189,7 @@ body {
   margin: 0 auto;
 }
 
+/* Stijl voor een leeftijdsoptie */
 .age-option {
   background: rgba(255, 255, 255, 0.15);
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -202,6 +216,7 @@ body {
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
+/* Geselecteerde optie krijgt andere kleur */
 .age-option.selected {
   background: #f0a500;
   border-color: #f0a500;
@@ -214,7 +229,6 @@ body {
   display: none;
 }
 
-/* Hearing selection - matching width with age selection */
 .hearing-selection {
   width: 100%;
   max-width: 900px;
@@ -304,6 +318,7 @@ body {
   padding: 3rem;
 }
 
+/* Instructiepagina */
 .instruction-content {
   text-align: center;
   max-width: 800px;
@@ -352,7 +367,7 @@ body {
   margin-top: 1rem;
 }
 
-/* Test interface styles */
+/* Test interface */
 #test-interface {
   position: relative;
   height: 100vh;
@@ -388,9 +403,9 @@ body {
   transform: translateX(-50%);
 }
 
-/* Styles for the evaluation page */
+/* Evaluation page */
 #achteraf {
-  max-width: 1500px; /* Increased width to use more screen space */
+  max-width: 1500px; 
   margin: 0 auto;
   max-height: 100vh; 
   overflow-y: auto;
