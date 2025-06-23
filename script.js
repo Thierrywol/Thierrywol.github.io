@@ -1,3 +1,6 @@
+// Dit script is geinspireerd door de huidige GHMPT, voor de logica omtrent de JND bepaling. 
+// Verder is dit script losstaand opgebouwt om specifiek richtinghoren in verschillende galmcondities JND te bepalen.
+
 // Fragmenten pad en test variabelen
 const fragmenten_path = "processed_fragments";
 
